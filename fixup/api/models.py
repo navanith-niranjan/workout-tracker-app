@@ -3,16 +3,16 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 class User(AbstractUser):
-    pass
-    # SEX_OPTIONS = [
-    #     ("M", "Male"),
-    #     ("F", "Female"),
-    # ]
+    SEX_OPTIONS = [
+        ("M", "Male"),
+        ("F", "Female"),
+        ("N", "Not Specified")
+    ]
 
-    # age = models.IntegerField(default=0)
-    # sex = models.CharField(max_length=1, choices=SEX_OPTIONS)
-    # height = models.CharField(max_length=3)
-    # weight = models.CharField(max_length=3)
+    age = models.IntegerField(default=0)
+    sex = models.CharField(default="N", max_length=1, choices=SEX_OPTIONS)
+    height = models.FloatField(default=0)
+    weight = models.FloatField(default=0)
 
 class WorkoutHistory(models.Model):
     pass
