@@ -9,33 +9,30 @@ class User(AbstractUser):
         ("N", "Not Specified")
     ]
 
-    age = models.IntegerField(default=0)
-    sex = models.CharField(default="N", max_length=1, choices=SEX_OPTIONS)
-    height = models.FloatField(default=0)
-    weight = models.FloatField(default=0)
+    age = models.IntegerField(null=True)
+    sex = models.CharField(null=True, max_length=1, choices=SEX_OPTIONS)
+    height = models.FloatField(null=True)
+    weight = models.FloatField(null=True)
 
 class WorkoutHistory(models.Model):
-    pass
-    # user = models.ForeignKey()
-    # session_name = models.CharField()
-    # date = models.DateField()
+    user = models.ForeignKey('User', on_delete=models.CASCADE, null=True)
+    session_name = models.CharField(null=True, max_length=100)
+    date = models.DateField(null=True)
 
 class Sessions(models.Model):
-    pass
-    # session = models.ForeignKey()
-    # exercise = models.ForeignKey()
-    # sets = models.IntegerField()
-    # weight = models.FloatField()
-    # kgorlb = models.CharField()
-    # reps = models.IntegerField()
-    # time = models.TimeField()
-    # pace = models.TimeField()
-    # distance = models.FloatField()
-    # kmormiles = models.CharField()
-    # notes = models.CharField()
-    # session_duration = models.TimeField()
+    workout_history = models.ForeignKey('WorkoutHistory', on_delete=models.CASCADE, null=True)
+    exercise = models.ForeignKey('ExerciseList', on_delete=models.CASCADE, null=True)
+    sets = models.IntegerField(null=True)
+    weight = models.FloatField(null=True)
+    kgorlb = models.CharField(null=True, max_length=3)  # Assuming it's either "kg" or "lb"
+    reps = models.IntegerField(null=True)
+    time = models.TimeField(null=True)
+    pace = models.TimeField(null=True)
+    distance = models.FloatField(null=True)
+    kmormiles = models.CharField(null=True, max_length=6)  # Assuming it's either "kilometers" or "miles"
+    notes = models.CharField(null=True, max_length=500)
+    session_duration = models.TimeField(null=True)
 
 class ExerciseList(models.Model):
-    pass
-    # exercise_name = models.CharField()
-    # exercise_type = models.CharField()
+    exercise_name = models.CharField(null=True, max_length=100)
+    exercise_type = models.CharField(null=True, max_length=100)
