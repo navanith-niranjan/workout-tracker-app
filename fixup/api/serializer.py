@@ -9,5 +9,6 @@ class WorkoutHistorySerializer(serializers.ModelSerializer):
 
 class SessionsSerializer(serializers.ModelSerializer):
     pass
+
 class ExerciseListSerializer(serializers.ModelSerializer):
     pass

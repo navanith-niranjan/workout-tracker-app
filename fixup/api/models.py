@@ -21,7 +21,8 @@ class WorkoutHistory(models.Model):
 
 class Sessions(models.Model):
     workout_history = models.ForeignKey('WorkoutHistory', on_delete=models.CASCADE, null=True)
-    exercise = models.ForeignKey('ExerciseList', on_delete=models.CASCADE, null=True)
+    exercise = models.ForeignKey('ExerciseList', on_delete=models.CASCADE, blank=True, null=True)
+    custom_exercise = models.ForeignKey('CustomExerciseList', on_delete=models.CASCADE, blank=True, null=True)
     sets = models.IntegerField(null=True)
     weight = models.FloatField(null=True)
     kgorlb = models.CharField(null=True, max_length=3)  # Assuming it's either "kg" or "lb"
@@ -36,3 +37,7 @@ class Sessions(models.Model):
 class ExerciseList(models.Model):
     exercise_name = models.CharField(null=True, max_length=100)
     exercise_type = models.CharField(null=True, max_length=100)
+
+class CustomExerciseList(models.Model):
+    user = models.OneToOneField('User', on_delete=models.CASCADE, null=True)
+    exercises = models.ManyToManyField(ExerciseList)
