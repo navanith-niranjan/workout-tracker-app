@@ -12,3 +12,6 @@ class SessionsSerializer(serializers.ModelSerializer):
 
 class ExerciseListSerializer(serializers.ModelSerializer):
     pass
+
+class CustomExerciseListSerializer(serializers.ModelSerializer):
+    pass
