@@ -13,6 +13,7 @@ class User(AbstractUser):
     sex = models.CharField(null=True, max_length=1, choices=SEX_OPTIONS)
     height = models.FloatField(null=True)
     weight = models.FloatField(null=True)
+    goals = models.CharField(null=True, max_length=500)
 
 class WorkoutHistory(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE, null=True)
