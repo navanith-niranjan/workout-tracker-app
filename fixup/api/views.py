@@ -2,11 +2,11 @@ from rest_framework.views import APIView
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework.response import Response
 from .models import User
-from .serializers import UserSerializer
+from .serializer import UserSerializer
 
 class UserListView(ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, APIView):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserSerializer 
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -32,7 +32,7 @@ class UserListView(ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateM
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
     def delete(self, request, pk, *args, **kwargs):
         user = self.get_object(pk)
         user.delete()
