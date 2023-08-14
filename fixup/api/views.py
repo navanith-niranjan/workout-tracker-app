@@ -27,7 +27,14 @@ class UserViewSet(viewsets.ModelViewSet):
         try:
             user = self.queryset.get(pk=pk)
             serializer = self.serializer_class(user)
-            return Response(serializer.data)
+            #-------------------- I added this to users retrieve in order to view user workout histories
+            workout_history = WorkoutHistory.objects.filter(user=user)
+            workout_history_serializer = WorkoutHistorySerializer(workout_history, many=True)
+            user_data = serializer.data
+            user_data['workout_history'] = workout_history_serializer.data
+            return Response(user_data)
+            #------------------- delete this if you dont want to see that
+            # return Response(serializer.data)
         except User.DoesNotExist:
             raise Http404
 
