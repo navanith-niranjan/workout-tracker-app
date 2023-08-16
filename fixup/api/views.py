@@ -65,15 +65,20 @@ class WorkoutHistoryViewSet(viewsets.ModelViewSet):
     queryset = WorkoutHistory.objects.all()
     serializer_class = WorkoutHistorySerializer
 
-    def list(self, request, pk = None):
-        workout_history_entries = self.queryset.filter(pk=pk)
+    def list(self, request, pk=None):
+        workout_history_entries = self.queryset.filter(user=pk)
         serializer = self.serializer_class(workout_history_entries, many=True)
         return Response(serializer.data)
 
-    def create(self, request):
-        serializer = self.serializer_class(data=request.data)
+    def create(self, request, pk=None):
+        try:
+            user = User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = self.serializer_class(user, data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save() 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
