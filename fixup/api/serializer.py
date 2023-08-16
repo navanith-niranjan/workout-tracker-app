@@ -4,7 +4,7 @@ from .models import User, WorkoutHistory, Sessions, ExerciseList, CustomExercise
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
+        fields = '__all__' 
 
 class WorkoutHistorySerializer(serializers.ModelSerializer):
     class Meta:

@@ -65,8 +65,8 @@ class WorkoutHistoryViewSet(viewsets.ModelViewSet):
     queryset = WorkoutHistory.objects.all()
     serializer_class = WorkoutHistorySerializer
 
-    def list(self, request):
-        workout_history_entries = self.queryset.all()
+    def list(self, request, pk = None):
+        workout_history_entries = self.queryset.filter(pk=pk)
         serializer = self.serializer_class(workout_history_entries, many=True)
         return Response(serializer.data)
 
@@ -83,7 +83,7 @@ class WorkoutHistoryViewSet(viewsets.ModelViewSet):
             serializer = self.serializer_class(workout_history)
             return Response(serializer.data)
         except WorkoutHistory.DoesNotExist:
-            raise Http404
+            return Response({}, status=status.HTTP_200_OK)
 
     def update(self, request, pk=None):
         try:
