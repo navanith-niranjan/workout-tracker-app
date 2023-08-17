@@ -84,16 +84,16 @@ class WorkoutHistoryViewSet(viewsets.ModelViewSet):
 
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            max_id = WorkoutHistory.objects.filter(user=user).aggregate(Max('user_specific_id'))['user_specific_id__max']
-            user_specific_id = (max_id or 0) + 1
-            serializer.save(user=user, user_specific_id=user_specific_id) 
+            max_id = WorkoutHistory.objects.filter(user=user).aggregate(Max('session_number'))['session_number__max']
+            session_number = (max_id or 0) + 1
+            serializer.save(user=user, session_number=session_number) 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def retrieve_session(self, request, pk=None, session_id=None): # Fully Functional
+    def retrieve_session(self, request, pk=None, session_number=None): # Fully Functional
         try:
             user = User.objects.get(pk=pk)
-            workout_history_entry = self.queryset.get(user=pk, user_specific_id=session_id)
+            workout_history_entry = self.queryset.get(user=pk, session_number=session_number)
             serializer = self.serializer_class(workout_history_entry)
             return Response(serializer.data)
         except User.DoesNotExist:
@@ -101,10 +101,10 @@ class WorkoutHistoryViewSet(viewsets.ModelViewSet):
         except WorkoutHistory.DoesNotExist:
             return Response({"error": "Session not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    def update_session(self, request, pk=None, session_id=None): # Fully Functional
+    def update_session(self, request, pk=None, session_number=None): # Fully Functional
         try:
             user = User.objects.get(pk=pk)
-            workout_history_entry = self.queryset.get(user=pk, user_specific_id=session_id)
+            workout_history_entry = self.queryset.get(user=pk, session_number=session_number)
         except User.DoesNotExist:
             raise Http404
         except WorkoutHistory.DoesNotExist:
@@ -112,14 +112,14 @@ class WorkoutHistoryViewSet(viewsets.ModelViewSet):
 
         serializer = self.serializer_class(workout_history_entry, data=request.data)
         if serializer.is_valid():
-            serializer.save(user=user, user_specific_id=session_id)
+            serializer.save(user=user, session_number=session_number)
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def destroy_session(self, request, pk=None, session_id=None): # Fully Functional
+    def destroy_session(self, request, pk=None, session_number=None): # Fully Functional
         try:
             user = User.objects.get(pk=pk)
-            workout_history_entry = self.queryset.get(user=pk, user_specific_id=session_id)
+            workout_history_entry = self.queryset.get(user=pk, session_number=session_number)
         except User.DoesNotExist:
             raise Http404
         except WorkoutHistory.DoesNotExist:
@@ -127,9 +127,9 @@ class WorkoutHistoryViewSet(viewsets.ModelViewSet):
 
         workout_history_entry.delete()
 
-        remaining_records = WorkoutHistory.objects.filter(user=user, user_specific_id__gt=session_id)
+        remaining_records = WorkoutHistory.objects.filter(user=user, session_number__gt=session_number)
         for record in remaining_records:
-            record.user_specific_id -= 1
+            record.session_number -= 1
             record.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)

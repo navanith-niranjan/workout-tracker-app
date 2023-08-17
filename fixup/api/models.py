@@ -21,7 +21,7 @@ class WorkoutHistory(models.Model):
     session_name = models.CharField(null=True, max_length=100)
     date = models.DateField(default=datetime.date.today)
 
-    user_specific_id = models.PositiveIntegerField(null=True)
+    session_number = models.PositiveIntegerField(null=True)
 
 class Sessions(models.Model):
     workout_history = models.ForeignKey('WorkoutHistory', on_delete=models.CASCADE, null=True)
