@@ -126,6 +126,12 @@ class WorkoutHistoryViewSet(viewsets.ModelViewSet):
             raise Http404
 
         workout_history_entry.delete()
+
+        remaining_records = WorkoutHistory.objects.filter(user=user, user_specific_id__gt=session_id)
+        for record in remaining_records:
+            record.user_specific_id -= 1
+            record.save()
+
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class SessionsViewSet(viewsets.ModelViewSet):
