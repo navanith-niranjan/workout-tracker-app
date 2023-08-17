@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+import datetime
 
 # Create your models here.
 class User(AbstractUser):
@@ -18,7 +19,9 @@ class User(AbstractUser):
 class WorkoutHistory(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE, null=True)
     session_name = models.CharField(null=True, max_length=100)
-    date = models.DateField(null=True)
+    date = models.DateField(default=datetime.date.today)
+
+    user_specific_id = models.PositiveIntegerField(null=True)
 
 class Sessions(models.Model):
     workout_history = models.ForeignKey('WorkoutHistory', on_delete=models.CASCADE, null=True)
