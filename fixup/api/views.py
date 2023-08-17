@@ -8,24 +8,25 @@ from .models import Sessions
 from .serializer import UserSerializer
 from .serializer import WorkoutHistorySerializer
 from .serializer import SessionsSerializer
+from django.db.models import Max
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer 
 
-    def list(self, request):
+    def list_users(self, request):
         users = self.queryset.all()
         serializer = self.serializer_class(users, many=True)
         return Response(serializer.data)
 
-    def create(self, request):
+    def create_user(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def retrieve(self, request, pk=None):
+    def retrieve_user(self, request, pk=None):
         try:
             user = self.queryset.get(pk=pk)
             serializer = self.serializer_class(user)
@@ -40,7 +41,7 @@ class UserViewSet(viewsets.ModelViewSet):
         except User.DoesNotExist:
             raise Http404
 
-    def update(self, request, pk=None):
+    def update_user(self, request, pk=None):
         try:
             user = self.queryset.get(pk=pk)
         except User.DoesNotExist:
@@ -52,7 +53,7 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def destroy(self, request, pk=None):
+    def destroy_user(self, request, pk=None):
         try:
             user = self.queryset.get(pk=pk)
         except User.DoesNotExist:
@@ -65,7 +66,7 @@ class WorkoutHistoryViewSet(viewsets.ModelViewSet):
     queryset = WorkoutHistory.objects.all()
     serializer_class = WorkoutHistorySerializer
 
-    def list(self, request, pk=None):
+    def list_sessions(self, request, pk=None):
         try:
             user = User.objects.get(pk=pk)
         except User.DoesNotExist:
@@ -75,7 +76,7 @@ class WorkoutHistoryViewSet(viewsets.ModelViewSet):
         serializer = self.serializer_class(workout_history_entries, many=True)
         return Response(serializer.data)
 
-    def create(self, request, pk=None):
+    def create_session(self, request, pk=None):
         try:
             user = User.objects.get(pk=pk)
         except User.DoesNotExist:
@@ -83,11 +84,13 @@ class WorkoutHistoryViewSet(viewsets.ModelViewSet):
 
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            serializer.save(user=user) 
+            max_id = WorkoutHistory.objects.filter(user=user).aggregate(Max('user_specific_id'))['user_specific_id__max']
+            user_specific_id = (max_id or 0) + 1
+            serializer.save(user=user, user_specific_id=user_specific_id) 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def retrieve(self, request, pk=None):
+    def retrieve_session(self, request, pk=None):
         try:
             workout_history = self.queryset.get(pk=pk)
             serializer = self.serializer_class(workout_history)
@@ -95,7 +98,7 @@ class WorkoutHistoryViewSet(viewsets.ModelViewSet):
         except WorkoutHistory.DoesNotExist:
             return Response({}, status=status.HTTP_200_OK)
 
-    def update(self, request, pk=None):
+    def update_session(self, request, pk=None):
         try:
             workout_history = self.queryset.get(pk=pk)
         except WorkoutHistory.DoesNotExist:
@@ -107,7 +110,7 @@ class WorkoutHistoryViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def destroy(self, request, pk=None):
+    def destroy_session(self, request, pk=None):
         try:
             workout_history = self.queryset.get(pk=pk)
         except WorkoutHistory.DoesNotExist:
