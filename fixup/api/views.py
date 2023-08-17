@@ -13,7 +13,7 @@ from .serializer import WorkoutHistorySerializer
 from .serializer import SessionsSerializer
 from .serializer import WeightLiftSessionSerializer
 from .serializer import RunningSessionSerializer
-from .serializer import ExerciseList
+from .serializer import ExerciseListSerializer
 from django.db.models import Max
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -144,16 +144,36 @@ class SessionsViewSet(viewsets.ModelViewSet):
     queryset = Sessions.objects.all()
     serializer_class = SessionsSerializer
 
-    def create(self, request, pk=None, session_number=None, exercise_number=None):
+    def create_exercise(self, request, pk=None, session_number=None):
         # Determine the exercise type based on the exercise_number
-        exercise = ExerciseList.objects.get(pk=exercise_number)
+        exercise_id = request.data.get('exercise')
+        try:
+            exercise = ExerciseList.objects.get(id=exercise_id)
+        except ExerciseList.DoesNotExist:
+            return Response({"error": "Exercise not found"}, status=status.HTTP_404_NOT_FOUND)
         
-        if exercise.exercise_type == "weightlifting":
-            return WeightLiftSessionViewSet.as_view({'post': 'create'})(request)
-        elif exercise.exercise_type == "running":
-            return RunningSessionViewSet.as_view({'post': 'create'})(request)
+        exercise_type = exercise.exercise_type
+
+        if exercise_type == "weightlifting":
+            return WeightLiftSessionViewSet.as_view({'post': 'create_set'})(request)
+        elif exercise_type == "running":
+            return RunningSessionViewSet.as_view({'post': 'create_info'})(request)
         else:
             return Response({"error": "Invalid exercise type"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    def list_exercises(self, request, exercise_type=None, pk=None, session_number=None):
+        sessions = None
+        
+        if exercise_type == 'weightlifting':
+            sessions = WeightLiftSession.objects.filter(session__user=self.request.user)
+        elif exercise_type == 'running':
+            sessions = RunningSession.objects.filter(session__user=self.request.user)
+
+        if sessions is None:
+            return Response({"error": "Invalid exercise type"}, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = WeightLiftSessionSerializer(sessions, many=True) if exercise_type == 'weightlifting' else RunningSessionSerializer(sessions, many=True)
+        return Response(serializer.data)
 
 class WeightLiftSessionViewSet(viewsets.ModelViewSet):
     queryset = WeightLiftSession.objects.all()
@@ -164,5 +184,15 @@ class RunningSessionViewSet(viewsets.ModelViewSet):
     serializer_class = RunningSessionSerializer
     
 class ExerciseListViewSet(viewsets.ModelViewSet):
-    pass
+    def list(self, request):
+        exercises = ExerciseList.objects.all()
+        serializer = ExerciseListSerializer(exercises, many=True)
+        return Response(serializer.data)
+    
+    def create(self, request, format=None):
+        serializer = ExerciseListSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
