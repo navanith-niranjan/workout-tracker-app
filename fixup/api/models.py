@@ -27,7 +27,9 @@ class Sessions(models.Model):
     workout_history = models.ForeignKey('WorkoutHistory', on_delete=models.CASCADE, null=True)
     exercise = models.ForeignKey('ExerciseList', on_delete=models.CASCADE, blank=True, null=True)
     custom_exercise = models.ForeignKey('CustomExerciseList', on_delete=models.CASCADE, blank=True, null=True)
+    exercise_number = models.IntegerField(null=True)
     sets = models.IntegerField(null=True)
+    set_number = models.IntegerField(null=True)
     weight = models.FloatField(null=True)
     kgorlb = models.CharField(null=True, max_length=3)  # Assuming it's either "kg" or "lb"
     reps = models.IntegerField(null=True)

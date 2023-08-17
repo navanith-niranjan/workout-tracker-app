@@ -138,19 +138,19 @@ class SessionsViewSet(viewsets.ModelViewSet):
     queryset = Sessions.objects.all()
     serializer_class = SessionsSerializer
 
-    def list(self, request):
+    def list_entries(self, request):
         sessions_entries = self.queryset.all()
         serializer = self.serializer_class(sessions_entries, many=True)
         return Response(serializer.data)
 
-    def create(self, request):
+    def create_entry(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def retrieve(self, request, pk=None):
+    def retrieve_entry(self, request, pk=None):
         try:
             session = self.queryset.get(pk=pk)
             serializer = self.serializer_class(session)
@@ -158,7 +158,7 @@ class SessionsViewSet(viewsets.ModelViewSet):
         except Sessions.DoesNotExist:
             raise Http404
 
-    def update(self, request, pk=None):
+    def update_entry(self, request, pk=None):
         try:
             session = self.queryset.get(pk=pk)
         except Sessions.DoesNotExist:
@@ -170,7 +170,7 @@ class SessionsViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def destroy(self, request, pk=None):
+    def destroy_entry(self, request, pk=None):
         try:
             session = self.queryset.get(pk=pk)
         except Sessions.DoesNotExist:
@@ -178,4 +178,16 @@ class SessionsViewSet(viewsets.ModelViewSet):
 
         session.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    def retrieve_set(self, request, pk=None):
+        pass
+
+    def update_set(self, request, pk=None):
+        pass
+
+    def delete_set(self,request, pk=None):
+        pass
+    
+class ExerciseListViewSet(viewsets.ModelViewSet):
+    pass
 
