@@ -5,9 +5,15 @@ from django.http import Http404
 from .models import User
 from .models import WorkoutHistory
 from .models import Sessions
+from .models import WeightLiftSession
+from .models import RunningSession
+from .models import ExerciseList
 from .serializer import UserSerializer
 from .serializer import WorkoutHistorySerializer
 from .serializer import SessionsSerializer
+from .serializer import WeightLiftSessionSerializer
+from .serializer import RunningSessionSerializer
+from .serializer import ExerciseList
 from django.db.models import Max
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -138,55 +144,24 @@ class SessionsViewSet(viewsets.ModelViewSet):
     queryset = Sessions.objects.all()
     serializer_class = SessionsSerializer
 
-    def list_entries(self, request):
-        sessions_entries = self.queryset.all()
-        serializer = self.serializer_class(sessions_entries, many=True)
-        return Response(serializer.data)
+    def create(self, request, pk=None, session_number=None, exercise_number=None):
+        # Determine the exercise type based on the exercise_number
+        exercise = ExerciseList.objects.get(pk=exercise_number)
+        
+        if exercise.exercise_type == "weightlifting":
+            return WeightLiftSessionViewSet.as_view({'post': 'create'})(request)
+        elif exercise.exercise_type == "running":
+            return RunningSessionViewSet.as_view({'post': 'create'})(request)
+        else:
+            return Response({"error": "Invalid exercise type"}, status=status.HTTP_400_BAD_REQUEST)
 
-    def create_entry(self, request):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class WeightLiftSessionViewSet(viewsets.ModelViewSet):
+    queryset = WeightLiftSession.objects.all()
+    serializer_class = WeightLiftSessionSerializer
 
-    def retrieve_entry(self, request, pk=None):
-        try:
-            session = self.queryset.get(pk=pk)
-            serializer = self.serializer_class(session)
-            return Response(serializer.data)
-        except Sessions.DoesNotExist:
-            raise Http404
-
-    def update_entry(self, request, pk=None):
-        try:
-            session = self.queryset.get(pk=pk)
-        except Sessions.DoesNotExist:
-            raise Http404
-
-        serializer = self.serializer_class(session, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def destroy_entry(self, request, pk=None):
-        try:
-            session = self.queryset.get(pk=pk)
-        except Sessions.DoesNotExist:
-            raise Http404
-
-        session.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-    
-    def retrieve_set(self, request, pk=None):
-        pass
-
-    def update_set(self, request, pk=None):
-        pass
-
-    def delete_set(self,request, pk=None):
-        pass
+class RunningSessionViewSet(viewsets.ModelViewSet):
+    queryset = RunningSession.objects.all()
+    serializer_class = RunningSessionSerializer
     
 class ExerciseListViewSet(viewsets.ModelViewSet):
     pass

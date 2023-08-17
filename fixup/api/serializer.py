@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, WorkoutHistory, Sessions, ExerciseList, CustomExerciseList
+from .models import User, WorkoutHistory, Sessions, ExerciseList, CustomExerciseList, WeightLiftSession, RunningSession
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,6 +14,16 @@ class WorkoutHistorySerializer(serializers.ModelSerializer):
 class SessionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sessions
+        fields = '__all__'
+
+class WeightLiftSessionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WeightLiftSession
+        fields = '__all__'
+
+class RunningSessionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RunningSession
         fields = '__all__'
 
 class ExerciseListSerializer(serializers.ModelSerializer):
