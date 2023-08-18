@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import UserViewSet, WorkoutHistoryViewSet, SessionsViewSet, ExerciseListViewSet
+from .views import UserViewSet, WorkoutHistoryViewSet, SessionsViewSet, ExerciseListViewSet, CustomExerciseListViewSet
 
 urlpatterns = [
     path('users/', UserViewSet.as_view({'get': 'list_users', 'post': 'create_user'}), name='user-list'),
@@ -9,5 +9,7 @@ urlpatterns = [
     path('users/<int:pk>/workout-history/<int:session_number>/details/', SessionsViewSet.as_view({'get': 'list_exercises', 'post': 'create_exercise'}), name = 'session-details'),
     #path('users/<int:pk>/workout-history/<int:session_number>/details/<int:exercise_number>/', SessionsViewSet.as_view({'get': 'retrieve_entry', 'post':'create_exercise_info', 'put': 'update_entry', 'delete': 'destroy_entry'}), name = 'entry-details'),
     
-    path('exercise-list/', ExerciseListViewSet.as_view({'get': 'list', 'post': 'create'}), name = 'exercise-list')
+    path('exercise-list/', ExerciseListViewSet.as_view({'get': 'list', 'post': 'create'}), name = 'exercise-list'),
+    path('users/<int:pk>/custom-exercise-list/', CustomExerciseListViewSet.as_view({'get': 'list', 'post': 'create'}), name = 'custom-exercise-list'),
+    path('users/<int:pk>/custom-exercise-list/<int:custom_exercise_pk>/', CustomExerciseListViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name = 'custom-exercise-detail')
 ]

@@ -8,12 +8,14 @@ from .models import Sessions
 from .models import WeightLiftSession
 from .models import RunningSession
 from .models import ExerciseList
+from .models import CustomExerciseList
 from .serializer import UserSerializer
 from .serializer import WorkoutHistorySerializer
 from .serializer import SessionsSerializer
 from .serializer import WeightLiftSessionSerializer
 from .serializer import RunningSessionSerializer
 from .serializer import ExerciseListSerializer
+from .serializer import CustomExerciseListSerializer
 from django.db.models import Max
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -78,7 +80,7 @@ class WorkoutHistoryViewSet(viewsets.ModelViewSet):
         except User.DoesNotExist:
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        workout_history_entries = self.queryset.filter(user=pk)
+        workout_history_entries = self.queryset.filter(user=user)
         serializer = self.serializer_class(workout_history_entries, many=True)
         return Response(serializer.data)
 
@@ -99,7 +101,7 @@ class WorkoutHistoryViewSet(viewsets.ModelViewSet):
     def retrieve_session(self, request, pk=None, session_number=None): # Fully Functional
         try:
             user = User.objects.get(pk=pk)
-            workout_history_entry = self.queryset.get(user=pk, session_number=session_number)
+            workout_history_entry = self.queryset.get(user=user, session_number=session_number)
             serializer = self.serializer_class(workout_history_entry)
             return Response(serializer.data)
         except User.DoesNotExist:
@@ -110,7 +112,7 @@ class WorkoutHistoryViewSet(viewsets.ModelViewSet):
     def update_session(self, request, pk=None, session_number=None): # Fully Functional
         try:
             user = User.objects.get(pk=pk)
-            workout_history_entry = self.queryset.get(user=pk, session_number=session_number)
+            workout_history_entry = self.queryset.get(user=user, session_number=session_number)
         except User.DoesNotExist:
             raise Http404
         except WorkoutHistory.DoesNotExist:
@@ -125,7 +127,7 @@ class WorkoutHistoryViewSet(viewsets.ModelViewSet):
     def destroy_session(self, request, pk=None, session_number=None): # Fully Functional
         try:
             user = User.objects.get(pk=pk)
-            workout_history_entry = self.queryset.get(user=pk, session_number=session_number)
+            workout_history_entry = self.queryset.get(user=user, session_number=session_number)
         except User.DoesNotExist:
             raise Http404
         except WorkoutHistory.DoesNotExist:
@@ -144,7 +146,7 @@ class SessionsViewSet(viewsets.ModelViewSet):
     queryset = Sessions.objects.all()
     serializer_class = SessionsSerializer
 
-    def list_exercises(self, request, pk=None, session_number=None): #Fully Functional
+    def list_exercises(self, request, pk=None, session_number=None): # Fully Functional
         try:
             user = User.objects.get(pk=pk)
             workout_history = WorkoutHistory.objects.get(user=user, session_number=session_number)
@@ -183,7 +185,7 @@ class SessionsViewSet(viewsets.ModelViewSet):
         else:
             return Response({"error": "Details not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    def create_exercise(self, request, pk=None, session_number=None):
+    def create_exercise(self, request, pk=None, session_number=None): # Fully Functional
         try:
             user = User.objects.get(pk=pk)
             workout_history = WorkoutHistory.objects.get(user=user, session_number=session_number)
@@ -218,27 +220,123 @@ class SessionsViewSet(viewsets.ModelViewSet):
     #     else:
     #         return Response({"error": "Invalid exercise type"}, status=status.HTTP_400_BAD_REQUEST)
 
-class WeightLiftSessionViewSet(viewsets.ModelViewSet):
-    queryset = WeightLiftSession.objects.all()
-    serializer_class = WeightLiftSessionSerializer
+# class WeightLiftSessionViewSet(viewsets.ModelViewSet):
+#     queryset = WeightLiftSession.objects.all()
+#     serializer_class = WeightLiftSessionSerializer
 
-    def create_set(self, request):
-        return Response({"wow"})
+#     def create_set(self, request):
+#         return Response({"wow"})
 
-class RunningSessionViewSet(viewsets.ModelViewSet):
-    queryset = RunningSession.objects.all()
-    serializer_class = RunningSessionSerializer
+# class RunningSessionViewSet(viewsets.ModelViewSet):
+#     queryset = RunningSession.objects.all()
+#     serializer_class = RunningSessionSerializer
     
 class ExerciseListViewSet(viewsets.ModelViewSet):
-    def list(self, request):
-        exercises = ExerciseList.objects.all()
-        serializer = ExerciseListSerializer(exercises, many=True)
+    queryset = ExerciseList.objects.all()
+    serializer_class = ExerciseListSerializer
+
+    def list(self, request): # Fully Functional
+        exercises = self.queryset.all()
+        serializer = self.serializer_class(exercises, many=True)
         return Response(serializer.data)
     
-    def create(self, request, format=None):
+    def create(self, request): # Fully Functional
         serializer = ExerciseListSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Not neccessary for users, may be needed for admin
+    
+    # def retrieve(self, request, pk=None):
+    #     try:
+    #         exercise = self.queryset.get(pk=pk)
+    #         serializer = self.serializer_class(exercise)
+    #         return Response(serializer.data)
+    #     except ExerciseList.DoesNotExist:
+    #         raise Http404
+    
+    # def update(self, request, pk=None):
+    #     try:
+    #         exercise = self.queryset.get(pk=pk)
+    #     except ExerciseList.DoesNotExist:
+    #         raise Http404
+
+    #     serializer = self.serializer_class(exercise, data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    # def destroy(self, request, pk=None):
+    #     try:
+    #         exercise = self.queryset.get(pk=pk)
+    #     except ExerciseList.DoesNotExist:
+    #         raise Http404
+
+    #     exercise.delete()
+    #     return Response(status=status.HTTP_204_NO_CONTENT)
+
+class CustomExerciseListViewSet(viewsets.ModelViewSet): 
+    queryset = CustomExerciseList.objects.all()
+    serializer_class = CustomExerciseListSerializer
+
+    def list(self, request, pk=None): # Fully Functional
+        try:
+            user = User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        custom_exercises = self.queryset.filter(user=user)
+        serializer = self.serializer_class(custom_exercises, many=True)
+        return Response(serializer.data)
+    
+    def create(self, request, pk=None): # Fully Functional
+        try:
+            user = User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = CustomExerciseListSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def retrieve(self, request, pk=None, custom_exercise_pk=None): # Fully Functional
+        try:
+            user = User.objects.get(pk=pk)
+            custom_exercise = self.queryset.get(user=user, pk=custom_exercise_pk)
+            serializer = self.serializer_class(custom_exercise)
+            return Response(serializer.data)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        except CustomExerciseList.DoesNotExist:
+            raise Http404
+    
+    def update(self, request, pk=None, custom_exercise_pk=None): # Fully Functional
+        try:
+            user = User.objects.get(pk=pk)
+            custom_exercise = self.queryset.get(user=user, pk=custom_exercise_pk)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        except CustomExerciseList.DoesNotExist:
+            raise Http404
+
+        serializer = self.serializer_class(custom_exercise, data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=user)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def destroy(self, request, pk=None, custom_exercise_pk=None): # Fully Functional
+        try:
+            user = User.objects.get(pk=pk)
+            custom_exercise = self.queryset.get(user=user, pk=custom_exercise_pk)
+        except CustomExerciseList.DoesNotExist:
+            raise Http404
+
+        custom_exercise.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
