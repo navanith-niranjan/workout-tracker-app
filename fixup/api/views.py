@@ -202,6 +202,33 @@ class SessionsViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    def retrieve_exercise():
+        pass
+
+    def update_exercise():
+        pass
+
+    def destroy_exercise():
+        pass
+
+    def list_exercise_stats():
+        pass
+
+    def create_exercise_stat():
+        pass
+
+    def update_exercise_stats():
+        pass
+
+    def destroy_exercise_stats():
+        pass
+
+    def update_specific_stat():
+        pass
+
+    def destroy_specific_stat():
+        pass
+
     # def create_exercise_info(self, request, pk=None, session_number=None, exercise_number=None):
     #     # Determine the exercise type based on the exercise_number
     #     exercise = ExerciseList.objects.get(exercise_number=exercise_number)
