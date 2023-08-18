@@ -144,7 +144,7 @@ class SessionsViewSet(viewsets.ModelViewSet):
     queryset = Sessions.objects.all()
     serializer_class = SessionsSerializer
 
-    def list_exercises(self, request, pk=None, session_number=None):
+    def list_exercises(self, request, pk=None, session_number=None): #Fully Functional
         try:
             user = User.objects.get(pk=pk)
             workout_history = WorkoutHistory.objects.get(user=user, session_number=session_number)
@@ -153,63 +153,35 @@ class SessionsViewSet(viewsets.ModelViewSet):
         except WorkoutHistory.DoesNotExist:
             return Response({"error": "Workout History not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        exercises = []
+        jsonResponse = []
 
         for session in workout_history.sessions_set.all():
-            if session.exercise:
-                exercises.append({
-                    "exercise_type": session.exercise.exercise_type,
-                    "exercise_name": session.exercise.exercise_name,
+            if session.exercise:    
+                exercise_data = {
+                    "id": session.id,
                     "exercise_number": session.exercise_number,
+                    "workout_history_id": session.workout_history.id,
+                    "session_number": session_number,
+                    "exercise_name": session.exercise.exercise_name,
+                    "exercise_type": session.exercise.exercise_type,
                     "notes": session.notes
-                })
-
+                }
             if session.custom_exercise:
-                for custom_exercise in session.custom_exercise.exercises.all():
-                    exercises.append({
-                        "exercise_type": custom_exercise.exercise_type,
-                        "exercise_name": custom_exercise.exercise_name,
-                        "exercise_number": custom_exercise.exercise_number,
-                        "notes": session.notes
-                    })
+                exercise_data = {
+                    "id": session.id,
+                    "exercise_number": session.exercise_number,
+                    "workout_history_id": session.workout_history.id,
+                    "session_number": session_number,
+                    "exercise_name": session.custom_exercise.custom_exercise_name,
+                    "exercise_type": session.custom_exercise.custom_exercise_type,
+                    "notes": session.notes
+                }
+            jsonResponse.append(exercise_data)    
 
-        return Response(exercises, status=status.HTTP_200_OK)
-
-    def create_exercise(self, request, pk=None, session_number=None):
-        try:
-            user = User.objects.get(pk=pk)
-            session_number = WorkoutHistory.objects.get(session_number=session_number)
-        except User.DoesNotExist:
-            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        except WorkoutHistory.DoesNotExist:
-            return Response({"error": "Session not found"}, status=status.HTTP_404_NOT_FOUND)
-        
-        serializer = self.serializer_class(data=request.data)
-        
-        if serializer.is_valid():
-            max_id = Sessions.objects.filter(workout_history=workout_history, exercise_number = exercise_number).aggregate(Max('exercise_number'))['exercise_number__max']
-            exercise_number = (max_id or 0) + 1
-            serializer.save(user=user, session_number=session_number, exercise_number = exercise_number) 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    # def create_exercise_info(self, request, pk=None, session_number=None, exercise_number=None):
-    #     # Determine the exercise type based on the exercise_number
-    #     exercise = ExerciseList.objects.get(exercise_number=exercise_number)
-    #     exercise_id = exercise.id
-    #     try:
-    #         exercise = ExerciseList.objects.get(id=exercise_id)
-    #     except ExerciseList.DoesNotExist:
-    #         return Response({"error": "Exercise not found"}, status=status.HTTP_404_NOT_FOUND)
-        
-    #     exercise_type = exercise.exercise_type
-
-    #     if exercise_type == "weightlifting":
-    #         return WeightLiftSessionViewSet.as_view({'post': 'create_set'})(request)
-    #     elif exercise_type == "running":
-    #         return RunningSessionViewSet.as_view({'post': 'create_info'})(request)
-    #     else:
-    #         return Response({"error": "Invalid exercise type"}, status=status.HTTP_400_BAD_REQUEST)
+        if jsonResponse:
+            return Response(jsonResponse, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Details not found"}, status=status.HTTP_404_NOT_FOUND)
 
     def create_exercise(self, request, pk=None, session_number=None):
         try:
@@ -227,6 +199,24 @@ class SessionsViewSet(viewsets.ModelViewSet):
             serializer.save(workout_history=workout_history, exercise_number=exercise_number)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    # def create_exercise_info(self, request, pk=None, session_number=None, exercise_number=None):
+    #     # Determine the exercise type based on the exercise_number
+    #     exercise = ExerciseList.objects.get(exercise_number=exercise_number)
+    #     exercise_id = exercise.id
+    #     try:
+    #         exercise = ExerciseList.objects.get(id=exercise_id)
+    #     except ExerciseList.DoesNotExist:
+    #         return Response({"error": "Exercise not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+    #     exercise_type = exercise.exercise_type
+
+    #     if exercise_type == "weightlifting":
+    #         return WeightLiftSessionViewSet.as_view({'post': 'create_set'})(request)
+    #     elif exercise_type == "running":
+    #         return RunningSessionViewSet.as_view({'post': 'create_info'})(request)
+    #     else:
+    #         return Response({"error": "Invalid exercise type"}, status=status.HTTP_400_BAD_REQUEST)
 
 class WeightLiftSessionViewSet(viewsets.ModelViewSet):
     queryset = WeightLiftSession.objects.all()

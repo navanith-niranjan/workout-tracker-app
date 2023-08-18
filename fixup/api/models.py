@@ -22,6 +22,7 @@ class WorkoutHistory(models.Model):
     date = models.DateField(default=datetime.date.today)
     session_number = models.PositiveIntegerField(null=True)
     session_duration = models.TimeField(null=True)
+    session_notes = models.CharField(null=True, max_length=500)
 
 class Sessions(models.Model):
     workout_history = models.ForeignKey('WorkoutHistory', on_delete=models.CASCADE, null=True)
@@ -64,5 +65,15 @@ class ExerciseList(models.Model):
     exercise_type = models.CharField(null=True, max_length=100)
 
 class CustomExerciseList(models.Model):
-    user = models.OneToOneField('User', on_delete=models.CASCADE, null=True)
-    exercises = models.ManyToManyField(ExerciseList)
+    user = models.ForeignKey('User', on_delete=models.CASCADE, null=True)
+    custom_exercise_name = models.CharField(null=True, max_length=100)
+    custom_exercise_type = models.CharField(null=True, max_length=100)
+    linked_exercise = models.ForeignKey(ExerciseList, on_delete=models.SET_NULL, blank=True, null=True)
+
+    #Overrides the custom_exercise_type by replacing it with the linked_exercise exercise_type if linked_exercise is not null
+    def save(self, *args, **kwargs):
+        if self.linked_exercise:
+            linked_exercise_type = self.linked_exercise.exercise_type
+            if linked_exercise_type:
+                self.custom_exercise_type = linked_exercise_type
+        super().save(*args, **kwargs)
