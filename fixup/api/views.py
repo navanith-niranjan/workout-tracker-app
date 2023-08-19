@@ -202,8 +202,38 @@ class SessionsViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def retrieve_exercise():
-        pass
+    def retrieve_exercise(self, request, pk=None, session_number=None, exercise_number=None): # Fully Functional
+        try:
+            user = User.objects.get(pk=pk)
+            workout_history = WorkoutHistory.objects.get(user=user, session_number=session_number)
+            exercise_entry = self.queryset.get(workout_history=workout_history, exercise_number=exercise_number)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Sessions.DoesNotExist:
+            return Response({"error": "Exercise not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        if exercise_entry.exercise:
+            exercise_data = {
+                "id": exercise_entry.id,
+                "exercise_number": exercise_entry.exercise_number,
+                "workout_history_id": exercise_entry.workout_history.id,
+                "session_number": session_number,
+                "exercise_name": exercise_entry.exercise.exercise_name,
+                "exercise_type": exercise_entry.exercise.exercise_type,
+                "notes": exercise_entry.notes
+            }
+        if exercise_entry.custom_exercise:
+            exercise_data = {
+                "id": exercise_entry.id,
+                "exercise_number": exercise_entry.exercise_number,
+                "workout_history_id": exercise_entry.workout_history.id,
+                "session_number": session_number,
+                "exercise_name": exercise_entry.custom_exercise.custom_exercise_name,
+                "exercise_type": exercise_entry.custom_exercise.custom_exercise_type,
+                "notes": exercise_entry.notes
+            }
+
+        return Response(exercise_data, status=status.HTTP_200_OK)
 
     def update_exercise():
         pass
@@ -247,16 +277,13 @@ class SessionsViewSet(viewsets.ModelViewSet):
     #     else:
     #         return Response({"error": "Invalid exercise type"}, status=status.HTTP_400_BAD_REQUEST)
 
-# class WeightLiftSessionViewSet(viewsets.ModelViewSet):
-#     queryset = WeightLiftSession.objects.all()
-#     serializer_class = WeightLiftSessionSerializer
+class WeightLiftSessionViewSet(viewsets.ModelViewSet):
+    queryset = WeightLiftSession.objects.all()
+    serializer_class = WeightLiftSessionSerializer
 
-#     def create_set(self, request):
-#         return Response({"wow"})
-
-# class RunningSessionViewSet(viewsets.ModelViewSet):
-#     queryset = RunningSession.objects.all()
-#     serializer_class = RunningSessionSerializer
+class RunningSessionViewSet(viewsets.ModelViewSet):
+    queryset = RunningSession.objects.all()
+    serializer_class = RunningSessionSerializer
     
 class ExerciseListViewSet(viewsets.ModelViewSet):
     queryset = ExerciseList.objects.all()
