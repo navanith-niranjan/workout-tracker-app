@@ -235,11 +235,28 @@ class SessionsViewSet(viewsets.ModelViewSet):
 
         return Response(exercise_data, status=status.HTTP_200_OK)
 
-    def update_exercise():
+    def update_exercise(self, request, pk=None, session_number=None, exercise_number=None):
         pass
 
-    def destroy_exercise():
-        pass
+    def destroy_exercise(self, request, pk=None, session_number=None, exercise_number=None): #Should be fine
+        try:
+            user = User.objects.get(pk=pk)
+            workout_history = WorkoutHistory.objects.get(user=user, session_number=session_number)
+            exercise_entry = self.queryset.get(workout_history=workout_history, exercise_number=exercise_number)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        except WorkoutHistory.DoesNotExist:
+            return Response({"error": "Session not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Sessions.DoesNotExist:
+            return Response({"error": "Exercise not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        exercise_entry.delete()
+        remaining_exercises = Sessions.objects.filter(workout_history=workout_history, exercise_number__gt=exercise_number)
+        for exercise in remaining_exercises:
+            exercise.exercise_number -= 1
+            exercise.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def list_exercise_stats():
         pass
