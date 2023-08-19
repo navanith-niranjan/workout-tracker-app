@@ -330,12 +330,6 @@ class SessionsViewSet(viewsets.ModelViewSet):
     def destroy_exercise_stats():
         pass
 
-    def update_specific_stat():
-        pass
-
-    def destroy_specific_stat():
-        pass
-
 class WeightLiftSessionViewSet(viewsets.ModelViewSet):
     queryset = WeightLiftSession.objects.all()
     serializer_class = WeightLiftSessionSerializer
@@ -362,8 +356,8 @@ class WeightLiftSessionViewSet(viewsets.ModelViewSet):
     
     def update_exercise_stats():
         pass
-    
-    def update_specific_stat():
+
+    def destroy_exercise_stats():
         pass
 
 class RunningSessionViewSet(viewsets.ModelViewSet):
@@ -389,6 +383,9 @@ class RunningSessionViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def update_exercise_stats():
+        pass
+
+    def destroy_exercise_stats():
         pass
     
 class ExerciseListViewSet(viewsets.ModelViewSet):
