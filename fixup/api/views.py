@@ -238,7 +238,50 @@ class SessionsViewSet(viewsets.ModelViewSet):
         return Response(exercise_data, status=status.HTTP_200_OK)
 
     def update_exercise(self, request, pk=None, session_number=None, exercise_number=None):
-        pass
+        try:
+            user = User.objects.get(pk=pk)
+            workout_history = WorkoutHistory.objects.get(user=user, session_number=session_number)
+            exercise_entry = Sessions.objects.get(workout_history=workout_history, exercise_number=exercise_number)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        except WorkoutHistory.DoesNotExist:
+            return Response({"error": "Session not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Sessions.DoesNotExist:
+            return Response({"error": "Exercise not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        if exercise_entry.exercise:
+            previous_exercise_type = exercise_entry.exercise.exercise_type
+        if exercise_entry.custom_exercise:
+            previous_exercise_type = exercise_entry.custom_exercise.custom_exercise_type
+
+        serializer = self.serializer_class(exercise_entry, data=request.data)
+        if serializer.is_valid():
+            new_exercise = serializer.validated_data.get("exercise")
+            new_custom_exercise = serializer.validated_data.get("custom_exercise")
+
+            serializer.save(workout_history=workout_history)
+
+            if new_exercise:
+                try:
+                    new_exercise = ExerciseList.objects.get(pk=new_exercise.id)
+                    new_exercise_type = new_exercise.exercise_type
+                except ExerciseList.DoesNotExist:
+                    return Response({"error": "New exercise not found"}, status=status.HTTP_404_NOT_FOUND)
+            elif new_custom_exercise:
+                try:
+                    new_custom_exercise = CustomExerciseList.objects.get(pk=new_custom_exercise.id)
+                    new_exercise_type = new_custom_exercise.custom_exercise_type
+                except CustomExerciseList.DoesNotExist:
+                    return Response({"error": "New custom exercise not found"}, status=status.HTTP_404_NOT_FOUND)
+
+            if new_exercise_type != previous_exercise_type:
+                if previous_exercise_type == "weightlifting":
+                    exercise_entry.weightliftsession_set.all().delete()
+                elif previous_exercise_type == "running":
+                    exercise_entry.runningsession_set.all().delete()
+
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy_exercise(self, request, pk=None, session_number=None, exercise_number=None): # Fully Functional
         try:
@@ -280,11 +323,11 @@ class SessionsViewSet(viewsets.ModelViewSet):
             exercise_type = None
 
         if exercise_type == "weightlifting":
-            try:
-                weight_lift_entry = WeightLiftSession.objects.filter(session=exercise_entry)
+            weight_lift_entry = WeightLiftSession.objects.filter(session=exercise_entry)
+            if weight_lift_entry.exists():
                 serializer = WeightLiftSessionSerializer(weight_lift_entry, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
-            except WeightLiftSession.DoesNotExist:
+            else:
                 return Response({"error": "Stats not found"}, status=status.HTTP_404_NOT_FOUND)
         elif exercise_type == "running":
             try:
@@ -324,10 +367,35 @@ class SessionsViewSet(viewsets.ModelViewSet):
         else:
             return Response({"error": "Exercise type not recognized"}, status=status.HTTP_400_BAD_REQUEST)
 
-    def update_exercise_stats():
-        pass
+    def update_exercise_stats(self, request, pk=None, session_number=None, exercise_number=None): # Fully Functional
+        try:
+            user = User.objects.get(pk=pk)
+            workout_history = WorkoutHistory.objects.get(user=user, session_number=session_number)
+            exercise_entry = self.queryset.get(workout_history=workout_history, exercise_number=exercise_number)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        except WorkoutHistory.DoesNotExist:
+            return Response({"error": "Session not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Sessions.DoesNotExist:
+            return Response({"error": "Exercise not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        if exercise_entry.exercise:
+            exercise_type = exercise_entry.exercise.exercise_type
+        elif exercise_entry.custom_exercise:
+            exercise_type = exercise_entry.custom_exercise.custom_exercise_type
+        else:
+            exercise_type = None
 
-    def destroy_exercise_stats(self, request, pk=None, session_number=None, exercise_number=None):
+        if exercise_type == "weightlifting":
+            weight_lift_viewset = WeightLiftSessionViewSet(request=request)
+            return weight_lift_viewset.update_exercise_stat(request, pk, session_number, exercise_number)
+        elif exercise_type == "running":
+            running_viewset = RunningSessionViewSet(request=request)
+            return running_viewset.update_exercise_stat(request, pk, session_number, exercise_number)
+        else:
+            return Response({"error": "Exercise type not recognized"}, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy_exercise_stats(self, request, pk=None, session_number=None, exercise_number=None): # Fully Functional
         try:
             user = User.objects.get(pk=pk)
             workout_history = WorkoutHistory.objects.get(user=user, session_number=session_number)
@@ -379,35 +447,32 @@ class WeightLiftSessionViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def update_exercise_stats():
-        pass
+    def update_exercise_stat(self, request, pk=None, session_number=None, exercise_number=None): # Fully Functional
+        try:
+            user = User.objects.get(pk=pk)
+            workout_history = WorkoutHistory.objects.get(user=user, session_number=session_number)
+            exercise_entry = Sessions.objects.get(workout_history=workout_history, exercise_number=exercise_number)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        except WorkoutHistory.DoesNotExist:
+            return Response({"error": "Session not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Sessions.DoesNotExist:
+            return Response({"error": "Exercise not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    # def destroy_exercise_stat(self, request, pk=None, session_number=None, exercise_number=None):
-    #     try:
-    #         user = User.objects.get(pk=pk)
-    #         workout_history = WorkoutHistory.objects.get(user=user, session_number=session_number)
-    #         exercise_entry = Sessions.objects.get(workout_history=workout_history, exercise_number=exercise_number)
-    #     except User.DoesNotExist:
-    #         return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-    #     except WorkoutHistory.DoesNotExist:
-    #         return Response({"error": "Session not found"}, status=status.HTTP_404_NOT_FOUND)
-    #     except Sessions.DoesNotExist:
-    #         return Response({"error": "Exercise not found"}, status=status.HTTP_404_NOT_FOUND)
+        set_number = request.data.get('set_number')  # Get the set_number from the request data
 
-    #     set_number = request.query_params.get('set_number')  # Get the set_number from the query parameters
+        try:
+            weight_lift_entry = WeightLiftSession.objects.get(session=exercise_entry, set_number=set_number)
+        except WeightLiftSession.DoesNotExist:
+            return Response({"error": "Set not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    #     if set_number is not None:
-    #         try:
-    #             weight_lift_entry = WeightLiftSession.objects.filter(session=exercise_entry, set_number=set_number)
-    #             weight_lift_entry.delete()
-    #         except WeightLiftSession.DoesNotExist:
-    #             return Response({"error": "Stats not found"}, status=status.HTTP_404_NOT_FOUND)
-    #     else:
-    #         exercise_entry.weightliftsession_set.all().delete()  # Use the default reverse relationship name
+        serializer = self.serializer_class(weight_lift_entry, data=request.data)
+        if serializer.is_valid():
+            serializer.save(session=exercise_entry, set_number=set_number)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    #     return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def destroy_exercise_stat(self, request, pk=None, session_number=None, exercise_number=None):
+    def destroy_exercise_stat(self, request, pk=None, session_number=None, exercise_number=None): # Fully Functional
         try:
             user = User.objects.get(pk=pk)
             workout_history = WorkoutHistory.objects.get(user=user, session_number=session_number)
@@ -434,7 +499,7 @@ class WeightLiftSessionViewSet(viewsets.ModelViewSet):
             except WeightLiftSession.DoesNotExist:
                 return Response({"error": "Stats not found"}, status=status.HTTP_404_NOT_FOUND)
         else:
-            exercise_entry.weightliftsession_set.all().delete()  # Use the default reverse relationship name
+            exercise_entry.weightliftsession_set.all().delete()  
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -454,16 +519,16 @@ class RunningSessionViewSet(viewsets.ModelViewSet):
         except Sessions.DoesNotExist:
             return Response({"error": "Exercise not found"}, status=status.HTTP_404_NOT_FOUND)
 
+        if RunningSession.objects.filter(session=exercise_entry).exists():
+            return Response({"error": "Running stats entry already exists"}, status=status.HTTP_400_BAD_REQUEST)
+
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save(session=exercise_entry)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def update_exercise_stats():
-        pass
-
-    def destroy_exercise_stats(self, request, pk=None, session_number=None, exercise_number=None):
+    def update_exercise_stat(self, request, pk=None, session_number=None, exercise_number=None): # Fully Functional
         try:
             user = User.objects.get(pk=pk)
             workout_history = WorkoutHistory.objects.get(user=user, session_number=session_number)
@@ -475,8 +540,25 @@ class RunningSessionViewSet(viewsets.ModelViewSet):
             return Response({"error": "Session not found"}, status=status.HTTP_404_NOT_FOUND)
         except Sessions.DoesNotExist:
             return Response({"error": "Exercise not found"}, status=status.HTTP_404_NOT_FOUND)
-        except RunningSession.DoesNotExist:
-            return Response({"error": "Running stats not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = self.serializer_class(running_entry, data=request.data)
+        if serializer.is_valid():
+            serializer.save(session=exercise_entry)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy_exercise_stat(self, request, pk=None, session_number=None, exercise_number=None): # Fully Functional
+        try:
+            user = User.objects.get(pk=pk)
+            workout_history = WorkoutHistory.objects.get(user=user, session_number=session_number)
+            exercise_entry = Sessions.objects.get(workout_history=workout_history, exercise_number=exercise_number)
+            running_entry = RunningSession.objects.get(session=exercise_entry)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        except WorkoutHistory.DoesNotExist:
+            return Response({"error": "Session not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Sessions.DoesNotExist:
+            return Response({"error": "Exercise not found"}, status=status.HTTP_404_NOT_FOUND)
 
         running_entry.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -31,6 +31,15 @@ class Sessions(models.Model):
     exercise_number = models.IntegerField(null=True)
     notes = models.CharField(null=True, max_length=500)
 
+    # This function ensures that either exercise or custom_exercise is null if the other has a value
+
+    def save(self, *args, **kwargs):
+        if self.exercise is not None:
+            self.custom_exercise = None
+        elif self.custom_exercise is not None:
+            self.exercise = None
+        super(Sessions, self).save(*args, **kwargs)
+
 # Types of Exercises
 class WeightLiftSession(models.Model):
     session = models.ForeignKey('Sessions', on_delete=models.CASCADE, null=True)
