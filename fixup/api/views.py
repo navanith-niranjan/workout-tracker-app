@@ -382,6 +382,31 @@ class WeightLiftSessionViewSet(viewsets.ModelViewSet):
     def update_exercise_stats():
         pass
 
+    # def destroy_exercise_stat(self, request, pk=None, session_number=None, exercise_number=None):
+    #     try:
+    #         user = User.objects.get(pk=pk)
+    #         workout_history = WorkoutHistory.objects.get(user=user, session_number=session_number)
+    #         exercise_entry = Sessions.objects.get(workout_history=workout_history, exercise_number=exercise_number)
+    #     except User.DoesNotExist:
+    #         return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+    #     except WorkoutHistory.DoesNotExist:
+    #         return Response({"error": "Session not found"}, status=status.HTTP_404_NOT_FOUND)
+    #     except Sessions.DoesNotExist:
+    #         return Response({"error": "Exercise not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    #     set_number = request.query_params.get('set_number')  # Get the set_number from the query parameters
+
+    #     if set_number is not None:
+    #         try:
+    #             weight_lift_entry = WeightLiftSession.objects.filter(session=exercise_entry, set_number=set_number)
+    #             weight_lift_entry.delete()
+    #         except WeightLiftSession.DoesNotExist:
+    #             return Response({"error": "Stats not found"}, status=status.HTTP_404_NOT_FOUND)
+    #     else:
+    #         exercise_entry.weightliftsession_set.all().delete()  # Use the default reverse relationship name
+
+    #     return Response(status=status.HTTP_204_NO_CONTENT)
+
     def destroy_exercise_stat(self, request, pk=None, session_number=None, exercise_number=None):
         try:
             user = User.objects.get(pk=pk)
@@ -394,12 +419,18 @@ class WeightLiftSessionViewSet(viewsets.ModelViewSet):
         except Sessions.DoesNotExist:
             return Response({"error": "Exercise not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        set_number = request.query_params.get('set_number')  # Get the set_number from the query parameters
+        set_number = request.data.get('set_number')  # Get the set_number from the request data
 
         if set_number is not None:
             try:
                 weight_lift_entry = WeightLiftSession.objects.filter(session=exercise_entry, set_number=set_number)
                 weight_lift_entry.delete()
+
+                # Correct the ordering of sets
+                remaining_sets = WeightLiftSession.objects.filter(session=exercise_entry, set_number__gt=set_number)
+                for remaining_set in remaining_sets:
+                    remaining_set.set_number -= 1
+                    remaining_set.save()
             except WeightLiftSession.DoesNotExist:
                 return Response({"error": "Stats not found"}, status=status.HTTP_404_NOT_FOUND)
         else:
