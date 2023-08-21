@@ -237,7 +237,7 @@ class SessionsViewSet(viewsets.ModelViewSet):
 
         return Response(exercise_data, status=status.HTTP_200_OK)
 
-    def update_exercise(self, request, pk=None, session_number=None, exercise_number=None):
+    def update_exercise(self, request, pk=None, session_number=None, exercise_number=None): # Fully Functional
         try:
             user = User.objects.get(pk=pk)
             workout_history = WorkoutHistory.objects.get(user=user, session_number=session_number)
@@ -259,6 +259,16 @@ class SessionsViewSet(viewsets.ModelViewSet):
             new_exercise = serializer.validated_data.get("exercise")
             new_custom_exercise = serializer.validated_data.get("custom_exercise")
 
+            if new_exercise and new_custom_exercise:
+                return Response({"error": "Both exercise and custom exercise cannot have values"}, status=status.HTTP_400_BAD_REQUEST)
+
+            if new_exercise:
+                exercise_entry.custom_exercise = None  # Set custom exercise to null
+                exercise_entry.exercise = new_exercise
+            elif new_custom_exercise:
+                exercise_entry.exercise = None  # Set exercise to null
+                exercise_entry.custom_exercise = new_custom_exercise
+            
             serializer.save(workout_history=workout_history)
 
             if new_exercise:
