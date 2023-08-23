@@ -2,20 +2,8 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
-from .models import User
-from .models import WorkoutHistory
-from .models import Sessions
-from .models import WeightLiftSession
-from .models import RunningSession
-from .models import ExerciseList
-from .models import CustomExerciseList
-from .serializer import UserSerializer
-from .serializer import WorkoutHistorySerializer
-from .serializer import SessionsSerializer
-from .serializer import WeightLiftSessionSerializer
-from .serializer import RunningSessionSerializer
-from .serializer import ExerciseListSerializer
-from .serializer import CustomExerciseListSerializer
+from .models import User, WorkoutHistory, Sessions, WeightLiftSession, RunningSession, ExerciseList, CustomExerciseList
+from .serializer import UserSerializer, WorkoutHistorySerializer, SessionsSerializer, WeightLiftSessionSerializer, RunningSessionSerializer, ExerciseListSerializer, CustomExerciseListSerializer
 from django.db.models import Max
 
 class UserViewSet(viewsets.ModelViewSet):
