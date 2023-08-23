@@ -6,6 +6,20 @@ from .models import User, WorkoutHistory, Sessions, WeightLiftSession, RunningSe
 from .serializer import UserSerializer, WorkoutHistorySerializer, SessionsSerializer, WeightLiftSessionSerializer, RunningSessionSerializer, ExerciseListSerializer, CustomExerciseListSerializer
 from django.db.models import Max
 
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from dj_rest_auth.registration.views import SocialLoginView, SocialConnectView
+
+class GoogleLogin(SocialLoginView): 
+    adapter_class = GoogleOAuth2Adapter
+    callback_url = CALLBACK_URL_YOU_SET_ON_GOOGLE
+    client_class = OAuth2Client
+
+class GoogleConnect(SocialConnectView): 
+    adapter_class = GoogleOAuth2Adapter
+    callback_url = CALLBACK_URL_YOU_SET_ON_GOOGLE
+    client_class = OAuth2Client
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer 

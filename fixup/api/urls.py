@@ -1,7 +1,17 @@
 from django.urls import path, include
 from .views import UserViewSet, WorkoutHistoryViewSet, SessionsViewSet, ExerciseListViewSet, CustomExerciseListViewSet
+from.views import GoogleLogin, GoogleConnect
+from dj_rest_auth.registration.views import SocialAccountListView, SocialAccountDisconnectView
 
 urlpatterns = [
+    path('dj-rest-auth/', include('dj_rest_auth.urls')),
+    path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
+    path('dj-rest-auth/social/google/', GoogleLogin.as_view(), name='google_login'),
+    path('dj-rest-auth/social/google/connect/', GoogleConnect.as_view(), name='google_connect'),
+    
+    path('socialaccounts/', SocialAccountListView.as_view(), name='social_account_list'),
+    path('socialaccounts/<int:pk>/disconnect/', SocialAccountDisconnectView.as_view(), name='social_account_disconnect'),
+
     path('users/', UserViewSet.as_view({'get': 'list_users', 'post': 'create_user'}), name='user-list'),
     path('users/<int:pk>/', UserViewSet.as_view({'get': 'retrieve_user', 'put': 'update_user', 'delete': 'destroy_user'}), name='user-detail'),
     path('users/<int:pk>/workout-history/', WorkoutHistoryViewSet.as_view({'get': 'list_sessions', 'post': 'create_session'}), name='user-workout-history'),
