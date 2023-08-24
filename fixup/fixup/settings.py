@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
+
+SOCIAL_GOOGLE_CLIENT_SECRET = config('SOCIAL_GOOGLE_CLIENT_SECRET')
+SOCIAL_GOOGLE_CALLBACK_URL = config('SOCIAL_GOOGLE_CALLBACK_URL')
+SOCIAL_GOOGLE_CLIENT_ID = config('SOCIAL_GOOGLE_CLIENT_ID')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -53,7 +58,8 @@ INSTALLED_APPS = [
 
 SITE_ID = 1
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # Something to do with verification email sent to user upon registration --- check this out
+# Used for testing and has to do with rest auth --- check this out
 
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = 'your-smtp-server.com'
@@ -67,8 +73,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
-            'client_id': 'your-client-id',
-            'secret': 'your-secret-key',
+            'client_id': SOCIAL_GOOGLE_CLIENT_ID,
+            'secret': SOCIAL_GOOGLE_CLIENT_SECRET,
+            'callback_url': SOCIAL_GOOGLE_CALLBACK_URL,
         }
     }
 }

@@ -5,19 +5,21 @@ from django.http import Http404
 from .models import User, WorkoutHistory, Sessions, WeightLiftSession, RunningSession, ExerciseList, CustomExerciseList
 from .serializer import UserSerializer, WorkoutHistorySerializer, SessionsSerializer, WeightLiftSessionSerializer, RunningSessionSerializer, ExerciseListSerializer, CustomExerciseListSerializer
 from django.db.models import Max
-
+from decouple import config
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView, SocialConnectView
 
+SOCIAL_GOOGLE_CALLBACK_URL = config('SOCIAL_GOOGLE_CALLBACK_URL')
+
 class GoogleLogin(SocialLoginView): 
     adapter_class = GoogleOAuth2Adapter
-    callback_url = CALLBACK_URL_YOU_SET_ON_GOOGLE
+    callback_url = SOCIAL_GOOGLE_CALLBACK_URL
     client_class = OAuth2Client
 
 class GoogleConnect(SocialConnectView): 
     adapter_class = GoogleOAuth2Adapter
-    callback_url = CALLBACK_URL_YOU_SET_ON_GOOGLE
+    callback_url = SOCIAL_GOOGLE_CALLBACK_URL
     client_class = OAuth2Client
 
 class UserViewSet(viewsets.ModelViewSet):
