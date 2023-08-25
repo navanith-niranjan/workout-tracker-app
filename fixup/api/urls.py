@@ -12,7 +12,7 @@ urlpatterns = [
     path('socialaccounts/', SocialAccountListView.as_view(), name='social_account_list'),
     path('socialaccounts/<int:pk>/disconnect/', SocialAccountDisconnectView.as_view(), name='social_account_disconnect'),
 
-    path('users/', UserViewSet.as_view({'get': 'list_users', 'post': 'create_user'}), name='user-list'),
+    path('users/', UserViewSet.as_view({'get': 'list_users'}), name='user-list'),
     path('users/<int:pk>/', UserViewSet.as_view({'get': 'retrieve_user', 'put': 'update_user', 'delete': 'destroy_user'}), name='user-detail'),
     path('users/<int:pk>/workout-history/', WorkoutHistoryViewSet.as_view({'get': 'list_sessions', 'post': 'create_session'}), name='user-workout-history'),
     path('users/<int:pk>/workout-history/<int:session_number>/', WorkoutHistoryViewSet.as_view({'get': 'retrieve_session', 'put': 'update_session', 'delete': 'destroy_session'}), name='user-workout-history-session'),

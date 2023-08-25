@@ -9,6 +9,8 @@ from decouple import config
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView, SocialConnectView
+from rest_framework.permissions import IsAuthenticated
+from .permissions import IsOwner
 
 SOCIAL_GOOGLE_CALLBACK_URL = config('SOCIAL_GOOGLE_CALLBACK_URL')
 
@@ -26,17 +28,19 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer 
 
+    permission_classes = [IsAuthenticated, IsOwner]
+
     def list_users(self, request): # Fully Functional
         users = self.queryset.all()
         serializer = self.serializer_class(users, many=True)
         return Response(serializer.data)
 
-    def create_user(self, request): # Fully Functional
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # def create_user(self, request): # Fully Functional
+    #     serializer = self.serializer_class(data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve_user(self, request, pk=None): # Fully Functional
         try:
@@ -77,6 +81,8 @@ class UserViewSet(viewsets.ModelViewSet):
 class WorkoutHistoryViewSet(viewsets.ModelViewSet):
     queryset = WorkoutHistory.objects.all()
     serializer_class = WorkoutHistorySerializer
+
+    permission_classes = [IsAuthenticated, IsOwner]
 
     def list_sessions(self, request, pk=None): # Fully Functional
         try:
@@ -149,6 +155,8 @@ class WorkoutHistoryViewSet(viewsets.ModelViewSet):
 class SessionsViewSet(viewsets.ModelViewSet):
     queryset = Sessions.objects.all()
     serializer_class = SessionsSerializer
+
+    permission_classes = [IsAuthenticated, IsOwner]
 
     def list_exercises(self, request, pk=None, session_number=None): # Fully Functional
         try:
@@ -441,6 +449,8 @@ class WeightLiftSessionViewSet(viewsets.ModelViewSet):
     queryset = WeightLiftSession.objects.all()
     serializer_class = WeightLiftSessionSerializer
 
+    permission_classes = [IsAuthenticated, IsOwner]
+
     def create_exercise_stat(self, request, pk=None, session_number=None, exercise_number=None): # Fully Functional
         try:
             user = User.objects.get(pk=pk)
@@ -521,6 +531,8 @@ class RunningSessionViewSet(viewsets.ModelViewSet):
     queryset = RunningSession.objects.all()
     serializer_class = RunningSessionSerializer
 
+    permission_classes = [IsAuthenticated, IsOwner]
+
     def create_exercise_stat(self, request, pk=None, session_number=None, exercise_number=None): # Fully Functional
         try:
             user = User.objects.get(pk=pk)
@@ -581,6 +593,8 @@ class ExerciseListViewSet(viewsets.ModelViewSet):
     queryset = ExerciseList.objects.all()
     serializer_class = ExerciseListSerializer
 
+    permission_classes = [IsAuthenticated]
+
     def list(self, request): # Fully Functional
         exercises = self.queryset.all()
         serializer = self.serializer_class(exercises, many=True)
@@ -627,6 +641,8 @@ class ExerciseListViewSet(viewsets.ModelViewSet):
 class CustomExerciseListViewSet(viewsets.ModelViewSet): 
     queryset = CustomExerciseList.objects.all()
     serializer_class = CustomExerciseListSerializer
+
+    permission_classes = [IsAuthenticated, IsOwner]
 
     def list(self, request, pk=None): # Fully Functional
         try:
