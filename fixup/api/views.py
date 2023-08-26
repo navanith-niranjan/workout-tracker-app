@@ -10,7 +10,6 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView, SocialConnectView
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsOwner, IsSelf
 
 SOCIAL_GOOGLE_CALLBACK_URL = config('SOCIAL_GOOGLE_CALLBACK_URL')
 
@@ -28,7 +27,7 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer 
 
-    permission_classes = [IsAuthenticated, IsSelf]
+    permission_classes = [IsAuthenticated]
 
     def list_users(self, request): # Fully Functional
         users = self.queryset.all()
@@ -82,7 +81,7 @@ class WorkoutHistoryViewSet(viewsets.ModelViewSet):
     queryset = WorkoutHistory.objects.all()
     serializer_class = WorkoutHistorySerializer
 
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated]
 
     def list_sessions(self, request, pk=None): # Fully Functional
         try:
@@ -156,7 +155,7 @@ class SessionsViewSet(viewsets.ModelViewSet):
     queryset = Sessions.objects.all()
     serializer_class = SessionsSerializer
 
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated]
 
     def list_exercises(self, request, pk=None, session_number=None): # Fully Functional
         try:
@@ -449,7 +448,7 @@ class WeightLiftSessionViewSet(viewsets.ModelViewSet):
     queryset = WeightLiftSession.objects.all()
     serializer_class = WeightLiftSessionSerializer
 
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated]
 
     def create_exercise_stat(self, request, pk=None, session_number=None, exercise_number=None): # Fully Functional
         try:
@@ -531,7 +530,7 @@ class RunningSessionViewSet(viewsets.ModelViewSet):
     queryset = RunningSession.objects.all()
     serializer_class = RunningSessionSerializer
 
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated]
 
     def create_exercise_stat(self, request, pk=None, session_number=None, exercise_number=None): # Fully Functional
         try:
@@ -642,7 +641,7 @@ class CustomExerciseListViewSet(viewsets.ModelViewSet):
     queryset = CustomExerciseList.objects.all()
     serializer_class = CustomExerciseListSerializer
 
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated]
 
     def list(self, request, pk=None): # Fully Functional
         try:
