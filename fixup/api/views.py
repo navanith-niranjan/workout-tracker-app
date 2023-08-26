@@ -10,7 +10,7 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView, SocialConnectView
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsOwner
+from .permissions import IsOwner, IsSelf
 
 SOCIAL_GOOGLE_CALLBACK_URL = config('SOCIAL_GOOGLE_CALLBACK_URL')
 
@@ -28,7 +28,7 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer 
 
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated, IsSelf]
 
     def list_users(self, request): # Fully Functional
         users = self.queryset.all()

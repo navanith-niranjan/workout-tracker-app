@@ -1,15 +1,17 @@
 from rest_framework import permissions
 
+class IsSelf(permissions.BasePermission):
+    """
+    Custom permission to only allow users to access their own User object.
+    """
+    
+    def has_object_permission(self, request, view, obj):
+        return obj == request.user
+
 class IsOwner(permissions.BasePermission):
     """
-    Custom permission to allow owners to read, create, and modify their own objects.
+    Custom permission to only allow owners of an object to access it.
     """
+    
     def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:  # Read permissions (GET, HEAD, OPTIONS)
-            return True
-
-        # Write permissions (POST, PUT, PATCH, DELETE) allowed only for object's owner
-        if request.method == 'POST' or obj.owner == request.user:
-            return True
-        
-        return False
+        return obj.owner == request.user

@@ -82,9 +82,14 @@ SOCIALACCOUNT_PROVIDERS = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',  # Use TokenAuthentication
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     ],
-    # ...
+}
+
+REST_AUTH = {
+    'USE_JWT': True,
+    'JWT_AUTH_COOKIE': 'api-auth',
+    'JWT_AUTH_REFRESH_COOKIE': 'api-refresh-token',
 }
 
 MIDDLEWARE = [
