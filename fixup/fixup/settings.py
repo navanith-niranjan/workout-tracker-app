@@ -90,6 +90,7 @@ REST_AUTH = {
     'USE_JWT': True,
     'JWT_AUTH_COOKIE': 'api-auth',
     'JWT_AUTH_REFRESH_COOKIE': 'api-refresh-token',
+    'LOGOUT_ON_PASSWORD_CHANGE' : False,
 }
 
 MIDDLEWARE = [

@@ -1,11 +1,13 @@
 from django.urls import path, include
 from .views import UserViewSet, WorkoutHistoryViewSet, SessionsViewSet, ExerciseListViewSet, CustomExerciseListViewSet
+from dj_rest_auth.registration.views import VerifyEmailView
 # from.views import GoogleLogin, GoogleConnect
 # from dj_rest_auth.registration.views import SocialAccountListView, SocialAccountDisconnectView
 
 urlpatterns = [
     path('auth/', include('dj_rest_auth.urls')),
     path('auth/registration/', include('dj_rest_auth.registration.urls')),
+    path('auth/account-confirm-email/', VerifyEmailView.as_view(), name='account_email_verification_sent'),
     # path('auth/social/google/', GoogleLogin.as_view(), name='google_login'),
     # path('auth/social/google/connect/', GoogleConnect.as_view(), name='google_connect'),
     
