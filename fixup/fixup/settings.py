@@ -13,9 +13,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from decouple import config
 
-SOCIAL_GOOGLE_CLIENT_SECRET = config('SOCIAL_GOOGLE_CLIENT_SECRET')
-SOCIAL_GOOGLE_CALLBACK_URL = config('SOCIAL_GOOGLE_CALLBACK_URL')
-SOCIAL_GOOGLE_CLIENT_ID = config('SOCIAL_GOOGLE_CLIENT_ID')
+# SOCIAL_GOOGLE_CLIENT_SECRET = config('SOCIAL_GOOGLE_CLIENT_SECRET')
+# SOCIAL_GOOGLE_CALLBACK_URL = config('SOCIAL_GOOGLE_CALLBACK_URL')
+# SOCIAL_GOOGLE_CLIENT_ID = config('SOCIAL_GOOGLE_CLIENT_ID')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -70,15 +70,15 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # Something to 
 # EMAIL_HOST_PASSWORD = 'your-email-password'
 # DEFAULT_FROM_EMAIL = 'your-email@example.com'
 
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'APP': {
-            'client_id': SOCIAL_GOOGLE_CLIENT_ID,
-            'secret': SOCIAL_GOOGLE_CLIENT_SECRET,
-            'callback_url': SOCIAL_GOOGLE_CALLBACK_URL,
-        }
-    }
-}
+# SOCIALACCOUNT_PROVIDERS = {
+#     'google': {
+#         'APP': {
+#             'client_id': SOCIAL_GOOGLE_CLIENT_ID,
+#             'secret': SOCIAL_GOOGLE_CLIENT_SECRET,
+#             'callback_url': SOCIAL_GOOGLE_CALLBACK_URL,
+#         }
+#     }
+# }
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [

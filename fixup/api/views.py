@@ -6,22 +6,22 @@ from .models import User, WorkoutHistory, Sessions, WeightLiftSession, RunningSe
 from .serializer import UserSerializer, WorkoutHistorySerializer, SessionsSerializer, WeightLiftSessionSerializer, RunningSessionSerializer, ExerciseListSerializer, CustomExerciseListSerializer
 from django.db.models import Max
 from decouple import config
-from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
-from allauth.socialaccount.providers.oauth2.client import OAuth2Client
-from dj_rest_auth.registration.views import SocialLoginView, SocialConnectView
+# from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+# from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+# from dj_rest_auth.registration.views import SocialLoginView, SocialConnectView
 from rest_framework.permissions import IsAuthenticated
 
-SOCIAL_GOOGLE_CALLBACK_URL = config('SOCIAL_GOOGLE_CALLBACK_URL')
+# SOCIAL_GOOGLE_CALLBACK_URL = config('SOCIAL_GOOGLE_CALLBACK_URL')
 
-class GoogleLogin(SocialLoginView): 
-    adapter_class = GoogleOAuth2Adapter
-    callback_url = SOCIAL_GOOGLE_CALLBACK_URL
-    client_class = OAuth2Client
+# class GoogleLogin(SocialLoginView): 
+#     adapter_class = GoogleOAuth2Adapter
+#     callback_url = SOCIAL_GOOGLE_CALLBACK_URL
+#     client_class = OAuth2Client
 
-class GoogleConnect(SocialConnectView): 
-    adapter_class = GoogleOAuth2Adapter
-    callback_url = SOCIAL_GOOGLE_CALLBACK_URL
-    client_class = OAuth2Client
+# class GoogleConnect(SocialConnectView): 
+#     adapter_class = GoogleOAuth2Adapter
+#     callback_url = SOCIAL_GOOGLE_CALLBACK_URL
+#     client_class = OAuth2Client
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
