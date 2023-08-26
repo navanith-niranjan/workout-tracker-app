@@ -1,8 +1,8 @@
 from django.urls import path, include
 from .views import UserViewSet, WorkoutHistoryViewSet, SessionsViewSet, ExerciseListViewSet, CustomExerciseListViewSet
-from dj_rest_auth.registration.views import VerifyEmailView
 # from.views import GoogleLogin, GoogleConnect
-# from dj_rest_auth.registration.views import SocialAccountListView, SocialAccountDisconnectView
+#from dj_rest_auth.registration.views import SocialAccountListView, SocialAccountDisconnectView
+from dj_rest_auth.registration.views import VerifyEmailView
 
 urlpatterns = [
     path('auth/', include('dj_rest_auth.urls')),

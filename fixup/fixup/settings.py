@@ -70,6 +70,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # Something to 
 # EMAIL_HOST_PASSWORD = 'your-email-password'
 # DEFAULT_FROM_EMAIL = 'your-email@example.com'
 
+# ACCOUNT_EMAIL_VERIFICATION ='MANDATORY'
+VERIFY_EMAIL = True
+
 # SOCIALACCOUNT_PROVIDERS = {
 #     'google': {
 #         'APP': {
@@ -79,6 +82,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # Something to 
 #         }
 #     }
 # }
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
