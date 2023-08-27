@@ -58,8 +58,8 @@ INSTALLED_APPS = [
 
 SITE_ID = 1
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # Something to do with verification email sent to user upon registration --- check this out
-# Used for testing and has to do with rest auth --- check this out
+# Email Verification
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # Used for Testing Purposes
 
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = 'your-smtp-server.com'
@@ -70,8 +70,17 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # Something to 
 # EMAIL_HOST_PASSWORD = 'your-email-password'
 # DEFAULT_FROM_EMAIL = 'your-email@example.com'
 
-# ACCOUNT_EMAIL_VERIFICATION ='MANDATORY'
-VERIFY_EMAIL = True
+AUTHENTICATION_BACKENDS = [
+    'allauth.account.auth_backends.AuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+LOGIN_URL = 'http://localhost:8000/api/auth/login/'
 
 # SOCIALACCOUNT_PROVIDERS = {
 #     'google': {
@@ -82,7 +91,6 @@ VERIFY_EMAIL = True
 #         }
 #     }
 # }
-
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
