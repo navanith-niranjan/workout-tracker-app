@@ -46,14 +46,12 @@ INSTALLED_APPS = [
     "api",
     "rest_framework",
     'rest_framework.authtoken',
-
     'dj_rest_auth',
     'dj_rest_auth.registration',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
 ]
 
 SITE_ID = 1
@@ -70,27 +68,17 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # Used for Test
 # EMAIL_HOST_PASSWORD = 'your-email-password'
 # DEFAULT_FROM_EMAIL = 'your-email@example.com'
 
-AUTHENTICATION_BACKENDS = [
-    'allauth.account.auth_backends.AuthenticationBackend',
-    'django.contrib.auth.backends.ModelBackend',
-]
-
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 LOGIN_URL = 'http://localhost:8000/api/auth/login/'
 
-# SOCIALACCOUNT_PROVIDERS = {
-#     'google': {
-#         'APP': {
-#             'client_id': SOCIAL_GOOGLE_CLIENT_ID,
-#             'secret': SOCIAL_GOOGLE_CLIENT_SECRET,
-#             'callback_url': SOCIAL_GOOGLE_CALLBACK_URL,
-#         }
-#     }
-# }
+AUTHENTICATION_BACKENDS = [
+    'allauth.account.auth_backends.AuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [

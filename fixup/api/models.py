@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import datetime
+import pyotp
 
 # Create your models here.
 class User(AbstractUser):
@@ -16,6 +17,25 @@ class User(AbstractUser):
     weight = models.FloatField(null=True)
     goals = models.CharField(null=True, max_length=500)
 
+    otp_secret = models.CharField(max_length=32, blank=True) 
+
+    def generate_otp_secret(self):
+        self.otp_secret = pyotp.random_base32()
+        self.save()
+
+    def generate_otp_code(self):
+        otp = pyotp.TOTP(self.otp_secret, interval=432000, digits=5)
+        return otp.now()
+
+    def verify_otp(self, entered_otp_code):
+        otp = pyotp.TOTP(self.otp_secret, interval=432000, digits=5)
+        expected_otp_code = otp.now()
+
+        return entered_otp_code == expected_otp_code
+    
+    def __str__(self):
+        return self.username
+    
 class WorkoutHistory(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE, null=True)
     session_name = models.CharField(null=True, max_length=100)

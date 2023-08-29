@@ -5,23 +5,74 @@ from django.http import Http404
 from .models import User, WorkoutHistory, Sessions, WeightLiftSession, RunningSession, ExerciseList, CustomExerciseList
 from .serializer import UserSerializer, WorkoutHistorySerializer, SessionsSerializer, WeightLiftSessionSerializer, RunningSessionSerializer, ExerciseListSerializer, CustomExerciseListSerializer
 from django.db.models import Max
-from decouple import config
 from rest_framework.permissions import IsAuthenticated
-# from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
-# from allauth.socialaccount.providers.oauth2.client import OAuth2Client
-# from dj_rest_auth.registration.views import SocialLoginView, SocialConnectView
+from dj_rest_auth.registration.views import RegisterView, VerifyEmailView, ResendEmailVerificationView
+from allauth.account.models import EmailAddress
+import pyotp
+from django.core.mail import send_mail
 
-# SOCIAL_GOOGLE_CALLBACK_URL = config('SOCIAL_GOOGLE_CALLBACK_URL')
+class CustomResendEmailConfirmation(ResendEmailVerificationView):
+    def create(self, request, *args, **kwargs):
+        try:
+            email = request.data.get('email')
+        except KeyError:
+            return Response({'error': 'Email required.'}, status=status.HTTP_400_BAD_REQUEST)
 
-# class GoogleLogin(SocialLoginView): 
-#     adapter_class = GoogleOAuth2Adapter
-#     callback_url = SOCIAL_GOOGLE_CALLBACK_URL
-#     client_class = OAuth2Client
+        try:
+            email_address = EmailAddress.objects.get(email=email)
+        except EmailAddress.DoesNotExist:
+            return Response({'error': 'Email not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-# class GoogleConnect(SocialConnectView): 
-#     adapter_class = GoogleOAuth2Adapter
-#     callback_url = SOCIAL_GOOGLE_CALLBACK_URL
-#     client_class = OAuth2Client
+        if not email_address.verified:
+            otp = email_address.user.generate_otp_code()
+            self.send_otp_email(email, otp)
+            return Response({'detail': 'Email sent successfully with a new OTP.'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'User already verified.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    def send_otp_email(self, email, otp_code):
+        subject = 'OTP Verification Code'
+        message = f'Your OTP code is: {otp_code}'
+        from_email = 'noreply@example.com'
+        recipient_list = [email]
+        send_mail(subject, message, from_email, recipient_list)
+
+class OTPVerificationView(VerifyEmailView):
+    def post(self, request, *args, **kwargs):
+        try:
+            email = request.data.get('email')
+            otp_code = request.data.get('otp_code')
+        except KeyError:
+            return Response({'error': 'Both email and OTP are required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise Http404
+
+        is_verified = user.verify_otp(otp_code)
+
+        if is_verified:
+            user.emailaddress_set.filter(verified=False).update(verified=True)
+            return Response({'success': 'Email verified successfully.'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Invalid OTP code.'}, status=status.HTTP_400_BAD_REQUEST)
+
+class CustomRegisterView(RegisterView):
+    def perform_create(self, serializer):
+        user = serializer.save(self.request)
+        user.generate_otp_secret()
+        otp_code = user.generate_otp_code()
+        self.send_otp_email(user.email, otp_code)
+
+        return user
+    
+    def send_otp_email(self, email, otp_code):
+        subject = 'OTP Verification Code'
+        message = f'Your OTP code is: {otp_code}'
+        from_email = 'noreply@example.com'
+        recipient_list = [email]
+        send_mail(subject, message, from_email, recipient_list)
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -29,10 +80,10 @@ class UserViewSet(viewsets.ModelViewSet):
 
     permission_classes = [IsAuthenticated]
 
-    def list_users(self, request): # Fully Functional
-        users = self.queryset.all()
-        serializer = self.serializer_class(users, many=True)
-        return Response(serializer.data)
+    # def list_users(self, request): # Fully Functional
+    #     users = self.queryset.all()
+    #     serializer = self.serializer_class(users, many=True)
+    #     return Response(serializer.data)
 
     # def create_user(self, request): # Fully Functional
     #     serializer = self.serializer_class(data=request.data)
