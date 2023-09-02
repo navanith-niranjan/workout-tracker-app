@@ -1,12 +1,24 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import AuthService from '../services/AuthService';
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState('');
+  const [emailOrUsername, setEmailorUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    // Implement your login logic here, e.g., call AuthService
+  const handleLogin = async () => {
+    if (!emailOrUsername || !password) {
+      console.log('Please fill in all fields');
+      return;
+    }
+
+    const loginResult = await AuthService.login(emailOrUsername, password);
+
+    if (loginResult.success) {
+      console.log('Login successful');
+    } else {
+      console.error('Login failed:', loginResult.error);
+    }
   };
 
   return (
@@ -15,8 +27,8 @@ const LoginScreen = () => {
       <TextInput
         style={styles.input}
         placeholder="Username or Email"
-        onChangeText={(text) => setEmail(text)}
-        value={email}
+        onChangeText={(text) => setEmailorUsername(text)}
+        value={emailOrUsername}
       />
       <TextInput
         style={styles.input}
