@@ -61,6 +61,7 @@ class WeightLiftSession(models.Model):
     ]
 
     set_number = models.IntegerField(null=True, unique=True)
+    warmup_set = models.BooleanField(default=False)
     weight = models.FloatField(null=True)
     kgorlb = models.CharField(null=True, max_length=2, choices=WEIGHT_METRIC_OPTIONS)
     reps = models.IntegerField(null=True)
