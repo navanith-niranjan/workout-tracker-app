@@ -2,7 +2,7 @@ import axios from 'axios'
 
 class AuthService {
   constructor() {
-    this.apiBaseUrl = 'http://127.0.0.1:8000';
+    this.apiBaseUrl = 'https://16f9-2605-b100-11b-40-e887-35f0-b64e-e04e.ngrok-free.app';
   }
 
   async login(emailOrUsername, password) {
@@ -21,7 +21,7 @@ class AuthService {
         password: password,
       };
 
-      const response = await axios.post(`${this.apiBaseUrl}/api/auth/login/`, requestData); // Issue with this line
+      const response = await axios.post(`${this.apiBaseUrl}/api/auth/login/`, requestData); 
 
       const userData = response.data;
 
