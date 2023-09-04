@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import AuthService from '../services/AuthService';
+import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {
+  const navigation = useNavigation();
+  const [error, setError] = useState('');
+
   const [emailOrUsername, setEmailorUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -12,12 +16,13 @@ const LoginScreen = () => {
       return;
     }
 
-    const loginResult = await AuthService.login(emailOrUsername, password);
+    const loginResult = await AuthService.login(emailOrUsername, password); // Also needs to check if verified otherwise it needs to be redirected to OTP verification page
 
     if (loginResult.success) {
-      console.log('Login successful');
-    } else {
-      console.error('Login failed:', loginResult.error);
+      navigation.navigate('HomeScreen');
+    } 
+    else {
+      setError('Incorrect credentials. Please try again.');
     }
   };
 
@@ -38,6 +43,7 @@ const LoginScreen = () => {
         value={password}
       />
       <Button title="Login" onPress={handleLogin} />
+      {error ? (<Text style={styles.error}>{error}</Text>) : null}
     </View>
   );
 };
@@ -59,6 +65,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
     paddingLeft: 10,
+  },
+  error: {
+    color: 'red',
+    fontSize: 14, // Adjust the font size as needed
+    marginTop: 10, // Margin to push it below the login button
   },
 });
 
