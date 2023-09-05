@@ -92,6 +92,51 @@ class AuthService {
       return { success: false, error: error.message };
     }
   }
+
+  async handleSendEmail(email) {
+    try {
+      const requestData = {
+        email: email,
+      };
+
+      const response = await axios.post(
+        `${this.apiBaseUrl}/api/auth/password/reset-otp/`,
+        requestData
+      );
+
+      if (response.status === 200) {
+        return { success: true };
+      } else {
+        return { success: false, error: 'Failed to send email' };
+      }
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
+
+  async handleVerifyOTP(email, otpCode) {
+    try {
+      const requestData = {
+        email: email,
+        otp_code: otpCode,
+      };
+
+      const response = await axios.post(
+        `${this.apiBaseUrl}/api/auth/password/reset-otp/confirm/`,
+        requestData
+      );
+
+      if (response.status === 200) {
+        return { success: true };
+      } else {
+        return { success: false, error: 'OTP verification failed' };
+      }
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
+
+  
 }
 
 export default new AuthService();

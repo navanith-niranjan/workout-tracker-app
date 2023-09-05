@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import AuthService from '../services/AuthService';
 import { useNavigation } from '@react-navigation/native';
 
@@ -26,6 +26,11 @@ const LoginScreen = () => {
     }
   };
 
+  const handleForgotPassword = () => {
+    // Navigate to the ForgotPasswordScreen when the "Forgot Password" link is pressed
+    navigation.navigate('ForgotPassword');
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
@@ -43,6 +48,9 @@ const LoginScreen = () => {
         value={password}
       />
       <Button title="Login" onPress={handleLogin} />
+      <TouchableOpacity onPress={handleForgotPassword}>
+        <Text style={styles.forgotPasswordLink}>Forgot Password?</Text>
+      </TouchableOpacity>
       {error ? (<Text style={styles.error}>{error}</Text>) : null}
     </View>
   );
@@ -65,6 +73,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
     paddingLeft: 10,
+  },
+  forgotPasswordLink: {
+    color: 'blue', // Change the text color as needed
+    textDecorationLine: 'underline', // Underline the text
+    marginTop: 10, // Adjust the margin as needed
   },
   error: {
     color: 'red',
