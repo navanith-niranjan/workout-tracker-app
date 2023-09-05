@@ -6,7 +6,7 @@ const LandingScreen = () => {
   const navigation = useNavigation();
 
   const handleSignUp = () => {
-    // navigation.navigate('SignUp');
+    navigation.navigate('SignUp');
   };
 
   const handleSignIn = () => {

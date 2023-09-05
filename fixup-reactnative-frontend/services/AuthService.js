@@ -2,9 +2,11 @@ import axios from 'axios'
 
 class AuthService {
   constructor() {
-    this.apiBaseUrl = 'https://1c05-142-181-46-57.ngrok-free.app';
+    this.apiBaseUrl = 
+    //'https://1c05-142-181-46-57.ngrok-free.app';
     //'https://16f9-2605-b100-11b-40-e887-35f0-b64e-e04e.ngrok-free.app';
     //'https://1890-142-189-85-134.ngrok-free.app/';
+     'https://5307-142-189-85-134.ngrok-free.app';
   }
 
   async login(emailOrUsername, password) {
@@ -34,6 +36,26 @@ class AuthService {
       return { success: false, error: error.message };
     }
 
+  }
+
+  async signup(username, email, password1, password2, firstName = '', lastName = '') {
+    try {
+      const requestData = {
+        username: username,
+        email: email,
+        password1: password1,
+        password2: password2,
+        first_name: firstName,
+        last_name: lastName,
+      };
+
+      const response = await axios.post(`${this.apiBaseUrl}/api/auth/registration/`, requestData);
+      const responseData = response.data;
+      
+      return { success: true, data: responseData };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
   }
 }
 
