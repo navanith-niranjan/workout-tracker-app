@@ -26,9 +26,19 @@ class User(AbstractUser):
     def generate_otp_code(self):
         otp = pyotp.TOTP(self.otp_secret, interval=432000, digits=5)
         return otp.now()
+    
+    def generate_password_reset_otp_code(self):
+        otp = pyotp.TOTP(self.otp_secret, interval=1200, digits=5)
+        return otp.now()
 
     def verify_otp(self, entered_otp_code):
         otp = pyotp.TOTP(self.otp_secret, interval=432000, digits=5)
+        expected_otp_code = otp.now()
+
+        return entered_otp_code == expected_otp_code
+    
+    def verify_password_reset_otp(self, entered_otp_code):
+        otp = pyotp.TOTP(self.otp_secret, interval=1200, digits=5)
         expected_otp_code = otp.now()
 
         return entered_otp_code == expected_otp_code

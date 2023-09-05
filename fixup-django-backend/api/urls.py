@@ -1,12 +1,14 @@
 from django.urls import path, include
 from .views import UserViewSet, WorkoutHistoryViewSet, SessionsViewSet, ExerciseListViewSet, CustomExerciseListViewSet
-from .views import CustomRegisterView, OTPVerificationView, CustomResendEmailConfirmation
+from .views import CustomRegisterView, OTPVerificationView, CustomResendEmailConfirmation, CustomRequestOTPForPasswordReset, CustomPasswordResetConfirmViaOTP
 
 urlpatterns = [
     path('auth/', include('dj_rest_auth.urls')),
     path('auth/registration/', CustomRegisterView.as_view(), name='custom_register'),
     path('auth/registration/verify-email-otp/', OTPVerificationView.as_view(), name='account_email_otp_verification'),
     path('auth/registration/resend-email-otp/', CustomResendEmailConfirmation.as_view(), name='account_resend_email_otp'),
+    path('auth/password/reset-otp/', CustomRequestOTPForPasswordReset.as_view(),name='custom_forgot_password'),
+    path('auth/password/reset-otp/confirm/', CustomPasswordResetConfirmViaOTP.as_view(), name='custom_forgot_password_confirm'),
 
     path('users/', UserViewSet.as_view({'get': 'list_users'}), name='user-list'),
     path('users/<int:pk>/', UserViewSet.as_view({'get': 'retrieve_user', 'put': 'update_user', 'delete': 'destroy_user'}), name='user-detail'),

@@ -7,10 +7,60 @@ from .serializer import UserSerializer, WorkoutHistorySerializer, SessionsSerial
 from django.db.models import Max
 from rest_framework.permissions import IsAuthenticated
 from dj_rest_auth.registration.views import RegisterView, VerifyEmailView, ResendEmailVerificationView
+from dj_rest_auth.views import PasswordResetView, PasswordResetConfirmView
 from allauth.account.models import EmailAddress
 import pyotp
 from django.core.mail import send_mail
 
+class CustomPasswordResetConfirmViaOTP(PasswordResetConfirmView):
+    def post(self, request, *args, **kwargs):
+        try:
+            email = request.data.get('email')
+            otp_code = request.data.get('otp_code')
+            new_password = request.data.get('password1')
+            confirm_new_password = request.data.get('password2')
+
+            if new_password != confirm_new_password:
+                return Response({'error': 'New passwords do not match.'}, status=status.HTTP_400_BAD_REQUEST)
+        except KeyError:
+            return Response({'error': 'Email, OTP, and both new password and confirm new password fields are required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise Http404
+
+        if not user.verify_password_reset_otp(otp_code):
+            return Response({'detail': 'Invalid OTP.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.set_password(new_password)
+        user.save()
+
+        return Response({'detail': 'Password has been reset with the new password.'})
+
+class CustomRequestOTPForPasswordReset(PasswordResetView):
+    def post(self, request, *args, **kwargs):
+        try:
+            email = request.data.get('email')
+        except KeyError:
+            return Response({'error': 'Email required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            email_address = EmailAddress.objects.get(email=email)
+        except EmailAddress.DoesNotExist:
+            return Response({'error': 'Email not found.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        otp = email_address.user.generate_password_reset_otp_code()
+        self.send_otp_email(email, otp)
+        return Response({'detail': 'OTP for password reset has been sent to your email.'}, status=status.HTTP_200_OK)
+
+    def send_otp_email(self, email, otp_code):
+        subject = 'Password Reset OTP'
+        message = f'Your OTP for password reset is: {otp_code}'
+        from_email = 'noreply@example.com'
+        recipient_list = [email]
+        send_mail(subject, message, from_email, recipient_list)
+    
 class CustomResendEmailConfirmation(ResendEmailVerificationView):
     def create(self, request, *args, **kwargs):
         try:
