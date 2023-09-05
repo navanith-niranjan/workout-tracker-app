@@ -57,6 +57,41 @@ class AuthService {
       return { success: false, error: error.message };
     }
   }
+
+  async verifyOTP(otpCode, email) {
+    try {
+      const requestData = {
+        otp_code: otpCode,
+        email: email, // Include the email in the request
+      };
+
+      const response = await axios.post(`${this.apiBaseUrl}/api/auth/registration/verify-email-otp/`, requestData);
+
+      if (response.status === 200) {
+        return { success: true };
+      } else {
+        return { success: false, error: 'OTP verification failed' };
+      }
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
+
+  async resendEmail(email) {
+    try {
+      const requestData = {
+        email: email,
+      };
+
+      const response = await axios.post(`${this.apiBaseUrl}/api/auth/registration/resend-email-otp/`, requestData);
+
+      const responseData = response.data;
+
+      return { success: true, data: responseData };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
 }
 
 export default new AuthService();

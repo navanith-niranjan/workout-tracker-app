@@ -36,8 +36,8 @@ const RegistrationScreen = () => {
       );
 
       if (signupResult.success) {
-        // Signup was successful, you can navigate to the login screen or any other screen
-        navigation.navigate('LoginScreen');
+        // Signup was successful, navigate to the OTP verification screen with the user's email
+        navigation.navigate('OTPVerify', { email: email }); // Update the screen name accordingly
       } else {
         // Handle signup failure, display an error message or take appropriate action
         setError(signupResult.error || 'Signup failed. Please try again.');
@@ -122,3 +122,5 @@ const styles = StyleSheet.create({
 });
 
 export default RegistrationScreen;
+
+
