@@ -6,10 +6,10 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 const OTPVerifyScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { email } = route.params; // Get the email from the route parameters
+  const { email, password } = route.params;
   const [otp, setOTP] = useState('');
   const [error, setError] = useState('');
-  const [isEmailSent, setIsEmailSent] = useState(true); // Change to false initially
+  const [isEmailSent, setIsEmailSent] = useState(true); 
 
   const handleVerify = async () => {
     if (!otp) {
@@ -18,39 +18,42 @@ const OTPVerifyScreen = () => {
     }
 
     try {
-      const verifyResult = await AuthService.verifyOTP(otp, email); // Include the email in the verification request
+      const verifyResult = await AuthService.verifyOTP(otp, email); 
 
       if (verifyResult.success) {
-        // OTP verification was successful, navigate to the login screen
-        navigation.navigate('SignIn'); // Update the screen name to 'SignIn' or your login screen's name
-      } else {
-        // Handle OTP verification failure, display an error message
+        const loginResult = await AuthService.login(email, password); 
+
+        if (loginResult.success) {
+          navigation.navigate('Home');
+        }
+        else {
+          setError('Login failed')
+        }
+      } 
+      else {
         setError(verifyResult.error || 'Invalid OTP. Please try again.');
       }
-    } catch (error) {
-      // Handle any unexpected errors that may occur during OTP verification
-      setError('An error occurred during OTP verification. Please try again later.');
-      console.error(error); // Log the error for debugging purposes
+    } 
+    catch (error) {
+        setError('An error occurred during OTP verification. Please try again later.');
+        console.error(error); 
     }
   };
 
   const handleResendEmail = async () => {
     try {
-      // Assuming you have access to the user's email address from the registration screen
-      // Replace 'userEmail' with the actual user's email
-      const resendResult = await AuthService.resendEmail(email); // Include the email in the resend request
+      const resendResult = await AuthService.resendEmail(email); 
 
       if (resendResult.success) {
-        // Email resend was successful, update the state to indicate the email has been resent
         setIsEmailSent(true);
-      } else {
-        // Handle email resend failure, display an error message
-        setError(resendResult.error || 'Failed to resend OTP email. Please try again.');
+      } 
+      else {
+          setError(resendResult.error || 'Failed to resend OTP email. Please try again.');
       }
-    } catch (error) {
-      // Handle any unexpected errors that may occur during email resend
-      setError('An error occurred during email resend. Please try again later.');
-      console.error(error); // Log the error for debugging purposes
+    } 
+    catch (error) {
+        setError('An error occurred during email resend. Please try again later.');
+        console.error(error);
     }
   };
 

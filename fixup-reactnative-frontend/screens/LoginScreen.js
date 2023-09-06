@@ -19,7 +19,7 @@ const LoginScreen = () => {
     const loginResult = await AuthService.login(emailOrUsername, password); // Also needs to check if verified otherwise it needs to be redirected to OTP verification page
 
     if (loginResult.success) {
-      navigation.navigate('HomeScreen');
+      navigation.navigate('Home');
     } 
     else {
       setError('Incorrect credentials. Please try again.');
@@ -27,7 +27,6 @@ const LoginScreen = () => {
   };
 
   const handleForgotPassword = () => {
-    // Navigate to the ForgotPasswordScreen when the "Forgot Password" link is pressed
     navigation.navigate('ForgotPassword');
   };
 
@@ -75,14 +74,14 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   forgotPasswordLink: {
-    color: 'blue', // Change the text color as needed
-    textDecorationLine: 'underline', // Underline the text
-    marginTop: 10, // Adjust the margin as needed
+    color: 'blue', 
+    textDecorationLine: 'underline', 
+    marginTop: 10, 
   },
   error: {
     color: 'red',
-    fontSize: 14, // Adjust the font size as needed
-    marginTop: 10, // Margin to push it below the login button
+    fontSize: 14,
+    marginTop: 10, 
   },
 });
 

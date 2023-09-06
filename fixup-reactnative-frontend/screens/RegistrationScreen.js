@@ -36,16 +36,13 @@ const RegistrationScreen = () => {
       );
 
       if (signupResult.success) {
-        // Signup was successful, navigate to the OTP verification screen with the user's email
-        navigation.navigate('OTPVerify', { email: email }); // Update the screen name accordingly
+        navigation.navigate('OTPVerify', { email: email, password: password });
       } else {
-        // Handle signup failure, display an error message or take appropriate action
-        setError(signupResult.error || 'Signup failed. Please try again.');
+          setError(signupResult.error || 'Signup failed. Please try again.');
       }
     } catch (error) {
-      // Handle any unexpected errors that may occur during the signup process
-      setError('An error occurred during signup. Please try again later.');
-      console.error(error); // Log the error for debugging purposes
+        setError('An error occurred during signup. Please try again later.');
+        console.error(error); 
     }
   };
 
