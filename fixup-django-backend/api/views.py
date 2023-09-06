@@ -16,22 +16,32 @@ class CustomPasswordResetConfirmViaOTP(PasswordResetConfirmView):
     def post(self, request, *args, **kwargs):
         try:
             email = request.data.get('email')
+            user = User.objects.get(email=email)
+        except KeyError:
+            return Response({'error': 'email field is required'}, status=status.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+            raise Http404
+        
+        try:
             otp_code = request.data.get('otp_code')
+
+            if not user.verify_password_reset_otp(otp_code):
+                return Response({'detail': 'Invalid OTP.'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        except KeyError:
+            return Response({'error': 'otp_code field is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
             new_password = request.data.get('password1')
             confirm_new_password = request.data.get('password2')
+
+            if not new_password or not confirm_new_password:
+                return Response({'error': 'Both new password and confirm new password fields are required.'}, status=status.HTTP_206_PARTIAL_CONTENT)
 
             if new_password != confirm_new_password:
                 return Response({'error': 'New passwords do not match.'}, status=status.HTTP_400_BAD_REQUEST)
         except KeyError:
-            return Response({'error': 'Email, OTP, and both new password and confirm new password fields are required.'}, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            raise Http404
-
-        if not user.verify_password_reset_otp(otp_code):
-            return Response({'detail': 'Invalid OTP.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Both new password and confirm new password fields are required.'}, status=status.HTTP_400_BAD_REQUEST)
 
         user.set_password(new_password)
         user.save()

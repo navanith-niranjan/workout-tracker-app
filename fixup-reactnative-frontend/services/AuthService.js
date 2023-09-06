@@ -6,7 +6,8 @@ class AuthService {
     //'https://1c05-142-181-46-57.ngrok-free.app';
     //'https://16f9-2605-b100-11b-40-e887-35f0-b64e-e04e.ngrok-free.app';
     //'https://1890-142-189-85-134.ngrok-free.app/';
-     'https://5307-142-189-85-134.ngrok-free.app';
+    //'https://5307-142-189-85-134.ngrok-free.app';
+    'https://7b48-142-189-85-134.ngrok-free.app';
   }
 
   async login(emailOrUsername, password) {
@@ -120,22 +121,19 @@ class AuthService {
         email: email,
         otp_code: otpCode,
       };
-
+  
       const response = await axios.post(
         `${this.apiBaseUrl}/api/auth/password/reset-otp/confirm/`,
         requestData
       );
-
-      if (response.status === 200) {
+  
+      if (response.status === 206) {
         return { success: true };
-      } else {
-        return { success: false, error: 'OTP verification failed' };
       }
     } catch (error) {
-      return { success: false, error: error.message };
+      return { success: false, error: 'OTP verification failed' };
     }
   }
-
   
 }
 

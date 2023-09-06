@@ -28,11 +28,9 @@ const ForgotPasswordScreen = () => {
       return;
     }
 
-    // Call the API endpoint to send an email with OTP
     const sendEmailResult = await AuthService.handleSendEmail(email);
 
     if (sendEmailResult.success) {
-      // Email sent successfully, change the stage to 'otp'
       setStage('otp');
     } else {
       console.log('Failed to send email:', sendEmailResult.error);
@@ -40,9 +38,19 @@ const ForgotPasswordScreen = () => {
   };
 
   const handleVerifyOTP = async () => {
-    // Implement your logic to verify the OTP entered by the user
-    // If OTP is verified successfully, change the stage to 'resetPassword'
-    setStage('resetPassword');
+    if (!otp) {
+      console.log('Please fill in your otp code');
+      return;
+    }
+
+    const otpResult = await AuthService.handleVerifyOTP(email, otp);
+
+    if (otpResult.success) {
+
+      setStage('resetPassword');
+    } else {
+      console.log('Error:', handleVerifyOTP.error);
+    }
   };
 
   const handleResetPassword = async () => {
