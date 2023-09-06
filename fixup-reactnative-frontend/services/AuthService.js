@@ -7,7 +7,8 @@ class AuthService {
     //'https://16f9-2605-b100-11b-40-e887-35f0-b64e-e04e.ngrok-free.app';
     //'https://1890-142-189-85-134.ngrok-free.app/';
     //'https://5307-142-189-85-134.ngrok-free.app';
-    'https://7b48-142-189-85-134.ngrok-free.app';
+    // 'https://7b48-142-189-85-134.ngrok-free.app';
+    'https://880a-2620-101-f000-700-3fff-ffff-109-7cad.ngrok-free.app';
   }
 
   async login(emailOrUsername, password) {
@@ -132,6 +133,28 @@ class AuthService {
       }
     } catch (error) {
       return { success: false, error: 'OTP verification failed' };
+    }
+  }
+
+  async handleResetPassword(email, otpCode, password1, password2) {
+    try {
+      const requestData = {
+        email: email,
+        otp_code: otpCode,
+        password1: password1,
+        password2: password2,
+      };
+  
+      const response = await axios.post(
+        `${this.apiBaseUrl}/api/auth/password/reset-otp/confirm/`,
+        requestData
+      );
+  
+      if (response.status === 200) {
+        return { success: true };
+      }
+    } catch (error) {
+      return { success: false, error: 'Passwords do not match' };
     }
   }
   

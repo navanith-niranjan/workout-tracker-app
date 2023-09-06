@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Animated, Easing } from 'react-native';
 import AuthService from '../services/AuthService';
+import { useNavigation } from '@react-navigation/native';
 
 const ForgotPasswordScreen = () => {
+  const navigation = useNavigation();
+
   const [email, setEmail] = useState('');
   const [otp, setOTP] = useState('');
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
-  const [stage, setStage] = useState('email'); // Initial stage is 'email'
-  const [fadeAnimOTP] = useState(new Animated.Value(0)); // Initialize opacity value
+  const [stage, setStage] = useState('email'); 
+  const [fadeAnimOTP] = useState(new Animated.Value(0));
 
   useEffect(() => {
-    // Trigger the fade-in effect when the stage changes to 'otp'
-    if (stage === 'otp') {
+    if (stage === 'otp' || stage === 'resetPassword') {
       Animated.timing(fadeAnimOTP, {
         toValue: 1,
-        duration: 500, // Adjust the duration as needed
+        duration: 500, 
         easing: Easing.linear,
         useNativeDriver: true,
       }).start();
@@ -46,7 +48,6 @@ const ForgotPasswordScreen = () => {
     const otpResult = await AuthService.handleVerifyOTP(email, otp);
 
     if (otpResult.success) {
-
       setStage('resetPassword');
     } else {
       console.log('Error:', handleVerifyOTP.error);
@@ -54,8 +55,19 @@ const ForgotPasswordScreen = () => {
   };
 
   const handleResetPassword = async () => {
-    // Implement your logic to reset the password using password1 and password2
-    // Once the password is reset, you can navigate the user to the login screen or another appropriate screen
+    if (!password1 || !password2) {
+      console.log('Please fill both password fields')
+      return;
+    }
+
+    const changePasswordResult = await AuthService.handleResetPassword(email, otp, password1, password2)
+
+    if (changePasswordResult.success) {
+      navigation.navigate('SignIn'); 
+    } else {
+      console.log('Error:', handleResetPassword.error)
+    }
+
   };
 
   return (
@@ -78,7 +90,7 @@ const ForgotPasswordScreen = () => {
           <View style={styles.otpContainer}>
             <Text style={styles.title}>Enter OTP</Text>
             <TextInput
-              style={[styles.input, styles.otpInput]} // Adjust the width to make it twice as long
+              style={[styles.input, styles.otpInput]} 
               placeholder="Enter OTP"
               onChangeText={(text) => setOTP(text)}
               value={otp}
@@ -135,7 +147,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   otpInput: {
-    width: '160%', // Make it twice as long as before
+    width: '160%', 
   },
 });
 
