@@ -16,7 +16,7 @@ const LoginScreen = () => {
       return;
     }
 
-    const loginResult = await AuthService.login(emailOrUsername, password); // Also needs to check if verified otherwise it needs to be redirected to OTP verification page
+    const loginResult = await AuthService.login(emailOrUsername, password);
 
     if (loginResult.success) {
       navigation.navigate('Home');
