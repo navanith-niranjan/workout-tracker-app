@@ -11,7 +11,7 @@ const Stack = createStackNavigator();
 const AuthNavigator = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Landing" component={LandingScreen} />
+      <Stack.Screen name="Landing" component={LandingScreen} options={{ headerShown: false }}/>
       <Stack.Screen name="SignUp" component={RegistrationScreen} />
       <Stack.Screen name="OTPVerify" component={OTPVerifyScreen} />
       <Stack.Screen name="SignIn" component={LoginScreen} />
