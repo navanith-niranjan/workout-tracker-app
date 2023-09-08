@@ -22,7 +22,17 @@ const LoginScreen = () => {
       navigation.navigate('Home');
     } 
     else {
-      setError('Incorrect credentials. Please try again.');
+      if (loginResult.error === 'Account is not verified') {
+        // if (emailOrUsername.includes('@')){
+          navigation.navigate('OTPVerify', { email: emailOrUsername, password: password});
+        // }
+        // else{
+        //   navigation.navigate('OTPVerify', { username: emailOrUsername, password: password});
+        // }
+      } 
+      else {
+        setError(loginResult.error);
+      }
     }
   };
 

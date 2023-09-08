@@ -2,38 +2,37 @@ import axios from 'axios'
 
 class AuthService {
   constructor() {
-    this.apiBaseUrl = 'https://1534-162-212-233-34.ngrok-free.app';
+    this.apiBaseUrl = 'https://ad8f-72-136-29-98.ngrok-free.app';
   }
 
   async login(emailOrUsername, password) {
     try {
       let identifierField;
-      
+  
       if (emailOrUsername.includes('@')) {
         identifierField = 'email';
-      } 
-      else {
+      } else {
         identifierField = 'username';
       }
-      
+  
       const requestData = {
         [identifierField]: emailOrUsername,
         password: password,
       };
-
-      const response = await axios.post(`${this.apiBaseUrl}/api/auth/login/`, requestData); 
-
+  
+      const response = await axios.post(`${this.apiBaseUrl}/api/auth/login/`, requestData);
       const userData = response.data;
-
       return { success: true, data: userData };
     } 
-
     catch (error) {
+        const errorMessages = error.response.data.non_field_errors;
+        if (errorMessages.includes('E-mail is not verified.')) {
+          return { success: false, error: 'Account is not verified' };
+        }
       return { success: false, error: error.message };
     }
-
   }
-
+  
   async signup(username, email, password1, password2, firstName = '', lastName = '') {
     try {
       const requestData = {
