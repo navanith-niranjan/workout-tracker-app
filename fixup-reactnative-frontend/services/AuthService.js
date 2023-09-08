@@ -59,6 +59,16 @@ class AuthService {
       
       return { success: true, data: responseData };
     } catch (error) {
+      if (error.response && error.response.data) {
+        const responseErrors = error.response.data;
+  
+        // Check if the API response contains username or email errors
+        if (responseErrors.username) {
+          return { success: false, error: responseErrors.username[0] };
+        } else if (responseErrors.email) {
+          return { success: false, error: responseErrors.email[0] };
+        }
+      }
       return { success: false, error: error.message };
     }
   }
