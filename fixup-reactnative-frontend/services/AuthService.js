@@ -2,7 +2,17 @@ import axios from 'axios'
 
 class AuthService {
   constructor() {
-    this.apiBaseUrl = 'https://ad8f-72-136-29-98.ngrok-free.app';
+    this.apiBaseUrl = 'https://1534-162-212-233-34.ngrok-free.app';
+  }
+
+  async get_email(Username) {
+    try {
+      const response = await axios.post(`${this.apiBaseUrl}/api/get-email/`, {username: Username});
+      return response.data.email;
+    } 
+    catch (error) {
+      console.error('Error:', error);
+    }
   }
 
   async login(emailOrUsername, password) {

@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignItems: 'center',
     width: '100%',
-    bottom: 40,
+    bottom: 100,
   },
   title: {
     fontFamily: 'Montserrat',

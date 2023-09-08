@@ -2,7 +2,7 @@ import { useFonts, Montserrat_400Regular, Montserrat_600SemiBold } from '@expo-g
 
 export default function useCustomFonts() {
   const [fontsLoaded, fontError] = useFonts({
-    Montserrat: Montserrat_400Regular,
+    'Montserrat': Montserrat_400Regular,
     'Montserrat-SemiBold': Montserrat_600SemiBold,
   });
 

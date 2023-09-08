@@ -1,8 +1,11 @@
 from django.urls import path, include
 from .views import UserViewSet, WorkoutHistoryViewSet, SessionsViewSet, ExerciseListViewSet, CustomExerciseListViewSet
 from .views import CustomRegisterView, OTPVerificationView, CustomResendEmailConfirmation, CustomRequestOTPForPasswordReset, CustomPasswordResetConfirmViaOTP
+from .views import get_email_via_username
 
 urlpatterns = [
+    path('get-email/', get_email_via_username, name='get-email-via-username'),
+
     path('auth/', include('dj_rest_auth.urls')),
     path('auth/registration/', CustomRegisterView.as_view(), name='custom_register'),
     path('auth/registration/verify-email-otp/', OTPVerificationView.as_view(), name='account_email_otp_verification'),

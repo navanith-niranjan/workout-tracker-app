@@ -11,6 +11,21 @@ from dj_rest_auth.views import PasswordResetView, PasswordResetConfirmView
 from allauth.account.models import EmailAddress
 import pyotp
 from django.core.mail import send_mail
+from rest_framework.decorators import api_view
+
+@api_view(['POST'])
+def get_email_via_username(request):
+    username = request.data.get('username', None)
+
+    if username is not None:
+        try:
+            user = User.objects.get(username=username)
+            email = user.email
+            return Response({'email': email})
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    return Response({'error': 'Invalid request data'}, status=status.HTTP_400_BAD_REQUEST)
 
 class CustomPasswordResetConfirmViaOTP(PasswordResetConfirmView):
     def post(self, request, *args, **kwargs):

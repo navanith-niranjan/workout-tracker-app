@@ -23,12 +23,13 @@ const LoginScreen = () => {
     } 
     else {
       if (loginResult.error === 'Account is not verified') {
-        // if (emailOrUsername.includes('@')){
+        if (!emailOrUsername.includes('@')) {
+          const emailfromUsername = await AuthService.get_email(emailOrUsername);
+          navigation.navigate('OTPVerify', { email: emailfromUsername, password: password});
+        }
+        else {
           navigation.navigate('OTPVerify', { email: emailOrUsername, password: password});
-        // }
-        // else{
-        //   navigation.navigate('OTPVerify', { username: emailOrUsername, password: password});
-        // }
+        }
       } 
       else {
         setError(loginResult.error);
