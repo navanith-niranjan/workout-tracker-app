@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import AuthService from '../services/AuthService';
 import { useNavigation } from '@react-navigation/native';
+import CustomButton from '../components/CustomButtonForLandingPage';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -43,7 +44,9 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Log in</Text>
+      <Text style={styles.subtitle}>Welcome back!</Text>
+      <View style={styles.inputContent}>
       <TextInput
         style={styles.input}
         placeholder="Username or Email"
@@ -57,7 +60,8 @@ const LoginScreen = () => {
         onChangeText={(text) => setPassword(text)}
         value={password}
       />
-      <Button title="Login" onPress={handleLogin} />
+      </View>
+      <CustomButton title="Login" onPress={handleLogin} />
       <TouchableOpacity onPress={handleForgotPassword}>
         <Text style={styles.forgotPasswordLink}>Forgot Password?</Text>
       </TouchableOpacity>
@@ -71,15 +75,28 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
+    marginTop: 70,
   },
   title: {
     fontSize: 24,
-    marginBottom: 20,
+    marginBottom: 10,
+    fontFamily: 'Montserrat',
+  },
+  subtitle: {
+    fontSize: 14,
+    marginBottom: 40,
+    fontFamily: 'Montserrat',
+  },
+  inputContent: {
+    width: '80%',
+    marginBottom: 40,
   },
   input: {
-    width: '80%',
-    height: 40,
-    borderColor: 'gray',
+    height: 50,
+    backgroundColor: 'white',
+    borderColor: 'white',
+    borderBottomColor: 'gray',
     borderWidth: 1,
     marginBottom: 10,
     paddingLeft: 10,
@@ -88,6 +105,7 @@ const styles = StyleSheet.create({
     color: 'blue', 
     textDecorationLine: 'underline', 
     marginTop: 10, 
+    fontFamily: 'Montserrat',
   },
   error: {
     color: 'red',

@@ -24,10 +24,10 @@ const LandingScreen = () => {
   };
 
   return (
-    <LinearGradient
-      colors={['#6800B4', '#36004E']}
-      style={styles.container}
-    >
+    // <LinearGradient
+    //   colors={['#6800B4', '#36004E']}
+    //   style={styles.container}
+    // >
       <View style={styles.content}>
         <Text style={styles.title}>FIXUP</Text>
         <Text style={styles.subtitle}>Workout Tracker Powered By GPT-3 AI</Text>
@@ -36,7 +36,7 @@ const LandingScreen = () => {
           <CustomButton title="Get started" onPress={handleSignUp} />
         </View>
       </View>
-    </LinearGradient>
+    // </LinearGradient>
   );
 };
 
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Montserrat',
     fontSize: 24,
-    color: 'white',
+    // color: 'white',
     marginBottom: 10,
   },
   subtitle: {
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: 16,
-    color: 'white',
+    // color: 'white',
     marginBottom: 20,
   },
 });

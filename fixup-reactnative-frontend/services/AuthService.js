@@ -2,7 +2,7 @@ import axios from 'axios'
 
 class AuthService {
   constructor() {
-    this.apiBaseUrl = 'https://1534-162-212-233-34.ngrok-free.app';
+    this.apiBaseUrl = 'https://3d44-2605-b100-119-7964-6409-a6f-af91-1d10.ngrok-free.app';
   }
 
   async get_email(Username) {
@@ -32,10 +32,12 @@ class AuthService {
   
       const response = await axios.post(`${this.apiBaseUrl}/api/auth/login/`, requestData);
       const userData = response.data;
-      return { success: true, data: userData };
+      console.log(userData.access)
+      return { success: true, data: userData, token: userData.access };
     } 
     catch (error) {
         const errorMessages = error.response.data.non_field_errors;
+        
         if (errorMessages.includes('E-mail is not verified.')) {
           return { success: false, error: 'Account is not verified' };
         }
@@ -62,7 +64,6 @@ class AuthService {
       if (error.response && error.response.data) {
         const responseErrors = error.response.data;
   
-        // Check if the API response contains username or email errors
         if (responseErrors.username) {
           return { success: false, error: responseErrors.username[0] };
         } else if (responseErrors.email) {
@@ -77,7 +78,7 @@ class AuthService {
     try {
       const requestData = {
         otp_code: otpCode,
-        email: email, // Include the email in the request
+        email: email, 
       };
 
       const response = await axios.post(`${this.apiBaseUrl}/api/auth/registration/verify-email-otp/`, requestData);
