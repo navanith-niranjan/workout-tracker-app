@@ -94,7 +94,7 @@ REST_AUTH = {
     'LOGOUT_ON_PASSWORD_CHANGE' : False,
 }
 
-ALLOWED_HOSTS = ['127.0.0.1', '3d44-2605-b100-119-7964-6409-a6f-af91-1d10.ngrok-free.app']
+ALLOWED_HOSTS = ['127.0.0.1', '10d2-72-136-29-98.ngrok-free.app']
 
 # Need to change this for production
 CORS_ALLOW_ALL_ORIGINS = True

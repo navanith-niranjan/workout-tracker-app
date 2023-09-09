@@ -2,7 +2,7 @@ import axios from 'axios'
 
 class AuthService {
   constructor() {
-    this.apiBaseUrl = 'https://3d44-2605-b100-119-7964-6409-a6f-af91-1d10.ngrok-free.app';
+    this.apiBaseUrl = 'https://10d2-72-136-29-98.ngrok-free.app';
   }
 
   async get_email(Username) {

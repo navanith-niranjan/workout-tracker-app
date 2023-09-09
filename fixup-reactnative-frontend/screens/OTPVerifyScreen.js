@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import AuthService from '../services/AuthService';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { StatusBar } from 'expo-status-bar';
 
 const OTPVerifyScreen = () => {
   const navigation = useNavigation();
@@ -59,6 +60,7 @@ const OTPVerifyScreen = () => {
 
   return (
     <View style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <Text style={styles.title}>OTP Verification</Text>
       {isEmailSent ? (
         <Text>Check your email for the OTP code.</Text>

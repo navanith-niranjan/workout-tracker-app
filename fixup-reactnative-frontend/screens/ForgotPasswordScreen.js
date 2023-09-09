@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Animated, Easing } from 'react-native';
 import AuthService from '../services/AuthService';
 import { useNavigation } from '@react-navigation/native';
+import { StatusBar } from 'expo-status-bar';
 
 const ForgotPasswordScreen = () => {
   const navigation = useNavigation();
@@ -72,6 +73,7 @@ const ForgotPasswordScreen = () => {
 
   return (
     <View style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       {stage === 'email' && (
         <>
           <Text style={styles.title}>Forgot Password</Text>

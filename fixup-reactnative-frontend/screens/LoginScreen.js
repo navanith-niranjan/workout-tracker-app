@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'rea
 import AuthService from '../services/AuthService';
 import { useNavigation } from '@react-navigation/native';
 import CustomButton from '../components/CustomButtonForLandingPage';
+import { StatusBar } from 'expo-status-bar';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -44,6 +45,7 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <Text style={styles.title}>Log in</Text>
       <Text style={styles.subtitle}>Welcome back!</Text>
       <View style={styles.inputContent}>

@@ -4,6 +4,7 @@ import CustomButton from '../components/CustomButtonForLandingPage';
 import { useNavigation } from '@react-navigation/native';
 import useCustomFonts from '../components/CustomFonts';
 import { LinearGradient } from 'expo-linear-gradient';
+import { StatusBar } from 'expo-status-bar';
 
 const LandingScreen = () => {
 
@@ -29,6 +30,7 @@ const LandingScreen = () => {
     //   style={styles.container}
     // >
       <View style={styles.content}>
+        <StatusBar barStyle="dark-content" />
         <Text style={styles.title}>FIXUP</Text>
         <Text style={styles.subtitle}>Workout Tracker Powered By GPT-3 AI</Text>
         <View style={styles.buttonContainer}>
