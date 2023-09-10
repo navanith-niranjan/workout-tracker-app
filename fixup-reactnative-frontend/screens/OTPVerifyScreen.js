@@ -72,6 +72,7 @@ const OTPVerifyScreen = () => {
         placeholder="Enter OTP"
         onChangeText={(text) => setOTP(text)}
         value={otp}
+        autoCapitalize="none"
       />
       <Button title="Verify" onPress={handleVerify} />
       <Button title="Resend Email" onPress={handleResendEmail} />

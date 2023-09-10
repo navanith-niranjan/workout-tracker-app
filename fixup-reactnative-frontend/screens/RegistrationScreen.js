@@ -56,24 +56,28 @@ const RegistrationScreen = () => {
         placeholder="First Name"
         onChangeText={(text) => setFirstName(text)}
         value={firstName}
+        autoCapitalize="none"
       />
       <TextInput
         style={styles.input}
         placeholder="Last Name"
         onChangeText={(text) => setLastName(text)}
         value={lastName}
+        autoCapitalize="none"
       />
       <TextInput
         style={styles.input}
         placeholder="Username"
         onChangeText={(text) => setUsername(text)}
         value={username}
+        autoCapitalize="none"
       />
       <TextInput
         style={styles.input}
         placeholder="Email"
         onChangeText={(text) => setEmail(text)}
         value={email}
+        autoCapitalize="none"
       />
       <TextInput
         style={styles.input}
@@ -81,6 +85,7 @@ const RegistrationScreen = () => {
         secureTextEntry
         onChangeText={(text) => setPassword(text)}
         value={password}
+        autoCapitalize="none"
       />
       <TextInput
         style={styles.input}
@@ -88,6 +93,7 @@ const RegistrationScreen = () => {
         secureTextEntry
         onChangeText={(text) => setConfirmPassword(text)}
         value={confirmPassword}
+        autoCapitalize="none"
       />
       <Button title="Sign Up" onPress={handleSignup} />
       {error ? <Text style={styles.error}>{error}</Text> : null}

@@ -54,6 +54,7 @@ const LoginScreen = () => {
         placeholder="Username or Email"
         onChangeText={(text) => setEmailorUsername(text)}
         value={emailOrUsername}
+        autoCapitalize="none"
       />
       <TextInput
         style={styles.input}
@@ -61,6 +62,7 @@ const LoginScreen = () => {
         secureTextEntry
         onChangeText={(text) => setPassword(text)}
         value={password}
+        autoCapitalize="none"
       />
       </View>
       <CustomButton title="Login" onPress={handleLogin} />

@@ -82,6 +82,7 @@ const ForgotPasswordScreen = () => {
             placeholder="Enter your email"
             onChangeText={(text) => setEmail(text)}
             value={email}
+            autoCapitalize="none"
           />
           <Button title="Send Email" onPress={handleSendEmail} />
         </>
@@ -96,6 +97,7 @@ const ForgotPasswordScreen = () => {
               placeholder="Enter OTP"
               onChangeText={(text) => setOTP(text)}
               value={otp}
+              autoCapitalize="none"
             />
             <Button title="Verify OTP" onPress={handleVerifyOTP} />
           </View>
@@ -111,6 +113,7 @@ const ForgotPasswordScreen = () => {
             secureTextEntry
             onChangeText={(text) => setPassword1(text)}
             value={password1}
+            autoCapitalize="none"
           />
           <TextInput
             style={styles.input}
@@ -118,6 +121,7 @@ const ForgotPasswordScreen = () => {
             secureTextEntry
             onChangeText={(text) => setPassword2(text)}
             value={password2}
+            autoCapitalize="none"
           />
           <Button title="Reset Password" onPress={handleResetPassword} />
         </>
