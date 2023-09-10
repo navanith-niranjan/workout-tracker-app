@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Animated, Easing } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Animated, Easing, KeyboardAvoidingView } from 'react-native';
 import AuthService from '../services/AuthService';
 import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
@@ -72,7 +72,11 @@ const ForgotPasswordScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      enabled
+    >
       <StatusBar barStyle="dark-content" />
       {stage === 'email' && (
         <>
@@ -126,7 +130,7 @@ const ForgotPasswordScreen = () => {
           <Button title="Reset Password" onPress={handleResetPassword} />
         </>
       )}
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

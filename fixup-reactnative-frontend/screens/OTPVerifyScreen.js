@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import AuthService from '../services/AuthService';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
@@ -59,7 +59,11 @@ const OTPVerifyScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      enabled
+    >
       <StatusBar barStyle="dark-content" />
       <Text style={styles.title}>OTP Verification</Text>
       {isEmailSent ? (
@@ -77,7 +81,7 @@ const OTPVerifyScreen = () => {
       <Button title="Verify" onPress={handleVerify} />
       <Button title="Resend Email" onPress={handleResendEmail} />
       {error ? <Text style={styles.error}>{error}</Text> : null}
-    </View>
+      </KeyboardAvoidingView>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import AuthService from '../services/AuthService';
 import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
@@ -48,7 +48,11 @@ const RegistrationScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      enabled
+    >
       <StatusBar barStyle="dark-content" />
       <Text style={styles.title}>Registration</Text>
       <TextInput
@@ -97,7 +101,7 @@ const RegistrationScreen = () => {
       />
       <Button title="Sign Up" onPress={handleSignup} />
       {error ? <Text style={styles.error}>{error}</Text> : null}
-    </View>
+      </KeyboardAvoidingView>
   );
 };
 

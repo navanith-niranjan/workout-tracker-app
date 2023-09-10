@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import AuthService from '../services/AuthService';
 import { useNavigation } from '@react-navigation/native';
 import CustomButton from '../components/CustomButtonForLandingPage';
@@ -44,7 +44,11 @@ const LoginScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      enabled
+    >
       <StatusBar barStyle="dark-content" />
       <Text style={styles.title}>Log in</Text>
       <Text style={styles.subtitle}>Welcome back!</Text>
@@ -70,7 +74,7 @@ const LoginScreen = () => {
         <Text style={styles.forgotPasswordLink}>Forgot Password?</Text>
       </TouchableOpacity>
       {error ? (<Text style={styles.error}>{error}</Text>) : null}
-    </View>
+      </KeyboardAvoidingView>
   );
 };
 
