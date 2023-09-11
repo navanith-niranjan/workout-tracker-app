@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import NavigationBar from '../components/NavigationBar';
 
 const HomeScreen = () => {
 
@@ -8,6 +9,7 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <Text style={styles.title}>Monkey</Text>
+      <NavigationBar activeTab="Home" onTabPress={(tab) => console.log(tab)} />
     </View>
   );
 };
