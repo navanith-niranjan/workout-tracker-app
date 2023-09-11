@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 60, // Adjust this value to make the tabs taller
+    height: 80, // Adjust this value to make the navigation bar taller
   },
   tab: {
     flex: 1,
