@@ -10,13 +10,13 @@ const Stack = createStackNavigator();
 
 const AuthNavigator = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Landing" component={LandingScreen} options={{ headerShown: false }}/>
-      <Stack.Screen name="SignUp" component={RegistrationScreen} options={{ headerShown: false }}/>
-      <Stack.Screen name="OTPVerify" component={OTPVerifyScreen} options={{ headerShown: false }}/>
-      <Stack.Screen name="SignIn" component={LoginScreen} options={{ headerShown: false }}/>
-      <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: false }}/>
-      <Stack.Screen name="Home" component={HomeScreen} />
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Landing" component={LandingScreen} />
+      <Stack.Screen name="SignUp" component={RegistrationScreen} />
+      <Stack.Screen name="OTPVerify" component={OTPVerifyScreen} />
+      <Stack.Screen name="SignIn" component={LoginScreen} />
+      <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+      <Stack.Screen name="Home" component={HomeScreen} options={{ gestureEnabled: false }}/>
     </Stack.Navigator>
   );
 };

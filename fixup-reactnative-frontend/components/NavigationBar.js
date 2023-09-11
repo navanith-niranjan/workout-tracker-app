@@ -63,14 +63,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: 'white', // Background color
+    backgroundColor: 'white', 
     borderTopWidth: 1,
-    borderTopColor: 'lightgray', // Tab separator color
+    borderTopColor: 'lightgray', 
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    height: 80, // Adjust this value to make the navigation bar taller
+    height: 80, 
   },
   tab: {
     flex: 1,
@@ -78,15 +78,16 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   tabText: {
-    color: 'gray', // Inactive tab text color
-    fontSize: 14, // Adjust font size
+    color: 'gray', 
+    fontSize: 14,
+    paddingBottom: 20,
   },
   activeTab: {
-    backgroundColor: 'white', // Active tab background color
+    backgroundColor: 'white', 
   },
   activeTabText: {
-    color: 'black', // Active tab text color
-    fontWeight: 'bold', // Bold text for the active tab
+    color: 'black', 
+    fontWeight: 'bold', 
   },
 });
 

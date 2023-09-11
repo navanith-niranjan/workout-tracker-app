@@ -4,6 +4,7 @@ import AuthService from '../services/AuthService';
 import { useNavigation } from '@react-navigation/native';
 import CustomButton from '../components/CustomButtonForLandingPage';
 import { StatusBar } from 'expo-status-bar';
+import CustomBackButton from '../components/CustomBackButton';
 
 const RegistrationScreen = () => {
   const navigation = useNavigation();
@@ -58,6 +59,7 @@ const RegistrationScreen = () => {
       contentContainerStyle={styles.container}
       keyboardDismissMode="on-drag"
       >
+      <CustomBackButton iconStyle={{position: 'absolute', right: 140, bottom: 60}}/>
         <StatusBar barStyle="dark-content" />
         <Text style={styles.title}>Create an account</Text>
         <View style={styles.inputContent}>
@@ -87,6 +89,7 @@ const RegistrationScreen = () => {
             placeholder="Email"
             onChangeText={(text) => setEmail(text)}
             value={email}
+            keyboardType='email-address'
             autoCapitalize="none"
           />
           <TextInput

@@ -4,6 +4,7 @@ import AuthService from '../services/AuthService';
 import { useNavigation } from '@react-navigation/native';
 import CustomButton from '../components/CustomButtonForLandingPage';
 import { StatusBar } from 'expo-status-bar';
+import CustomBackButton from '../components/CustomBackButton';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -53,6 +54,7 @@ const LoginScreen = () => {
       contentContainerStyle={styles.container}
       keyboardDismissMode="on-drag"
       >
+      <CustomBackButton iconStyle={{position: 'absolute', right: 140, bottom: 160}}/>
         <StatusBar barStyle="dark-content" />
         <Text style={styles.title}>Log in</Text>
         <Text style={styles.subtitle}>Welcome back!</Text>

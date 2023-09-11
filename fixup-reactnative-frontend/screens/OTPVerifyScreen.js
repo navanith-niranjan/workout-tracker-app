@@ -4,6 +4,7 @@ import AuthService from '../services/AuthService';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import CustomButton from '../components/CustomButtonForLandingPage';
 import { StatusBar } from 'expo-status-bar';
+import CustomBackButton from '../components/CustomBackButton';
 
 const OTPVerifyScreen = () => {
   const navigation = useNavigation();
@@ -69,6 +70,7 @@ const OTPVerifyScreen = () => {
       contentContainerStyle={styles.container}
       keyboardDismissMode="on-drag"
       >
+      <CustomBackButton iconStyle={{position: 'absolute', right: 140, bottom: 190}}/>
         <StatusBar barStyle="dark-content" />
         <Text style={styles.title}>OTP Verification</Text>
         {isEmailSent ? (

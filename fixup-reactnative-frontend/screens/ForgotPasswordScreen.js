@@ -4,6 +4,7 @@ import AuthService from '../services/AuthService';
 import { useNavigation } from '@react-navigation/native';
 import CustomButton from '../components/CustomButtonForLandingPage';
 import { StatusBar } from 'expo-status-bar';
+import CustomBackButton from '../components/CustomBackButton';
 
 const ForgotPasswordScreen = () => {
   const navigation = useNavigation();
@@ -82,6 +83,7 @@ const ForgotPasswordScreen = () => {
       contentContainerStyle={styles.container}
       keyboardDismissMode="on-drag"
       >
+      <CustomBackButton iconStyle={{position: 'absolute', right: 140, bottom: 220}}/>
         <StatusBar barStyle="dark-content" />
         {stage === 'email' && (
           <>
