@@ -12,10 +12,10 @@ const AuthNavigator = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Landing" component={LandingScreen} options={{ headerShown: false }}/>
-      <Stack.Screen name="SignUp" component={RegistrationScreen} />
-      <Stack.Screen name="OTPVerify" component={OTPVerifyScreen} />
+      <Stack.Screen name="SignUp" component={RegistrationScreen} options={{ headerShown: false }}/>
+      <Stack.Screen name="OTPVerify" component={OTPVerifyScreen} options={{ headerShown: false }}/>
       <Stack.Screen name="SignIn" component={LoginScreen} options={{ headerShown: false }}/>
-      <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+      <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: false }}/>
       <Stack.Screen name="Home" component={HomeScreen} />
     </Stack.Navigator>
   );

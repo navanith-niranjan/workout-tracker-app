@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { View, Text, TextInput, ScrollView, StyleSheet, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import AuthService from '../services/AuthService';
 import { useNavigation } from '@react-navigation/native';
 import CustomButton from '../components/CustomButtonForLandingPage';
@@ -45,36 +45,42 @@ const LoginScreen = () => {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       enabled
     >
-      <StatusBar barStyle="dark-content" />
-      <Text style={styles.title}>Log in</Text>
-      <Text style={styles.subtitle}>Welcome back!</Text>
-      <View style={styles.inputContent}>
-      <TextInput
-        style={styles.input}
-        placeholder="Username or Email"
-        onChangeText={(text) => setEmailorUsername(text)}
-        value={emailOrUsername}
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        onChangeText={(text) => setPassword(text)}
-        value={password}
-        autoCapitalize="none"
-      />
-      </View>
-      <CustomButton title="Login" onPress={handleLogin} />
-      <TouchableOpacity onPress={handleForgotPassword}>
-        <Text style={styles.forgotPasswordLink}>Forgot Password?</Text>
-      </TouchableOpacity>
-      {error ? (<Text style={styles.error}>{error}</Text>) : null}
-      </KeyboardAvoidingView>
+      <ScrollView
+      contentContainerStyle={styles.container}
+      keyboardDismissMode="on-drag"
+      >
+        <StatusBar barStyle="dark-content" />
+        <Text style={styles.title}>Log in</Text>
+        <Text style={styles.subtitle}>Welcome back!</Text>
+        <View style={styles.inputContent}>
+          <TextInput
+            style={styles.input}
+            keyboardType='email-address'
+            placeholder="Username or Email"
+            onChangeText={(text) => setEmailorUsername(text)}
+            value={emailOrUsername}
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            secureTextEntry
+            onChangeText={(text) => setPassword(text)}
+            value={password}
+            autoCapitalize="none"
+          />
+        </View>
+        <CustomButton title="Login" onPress={handleLogin} />
+        <TouchableOpacity onPress={handleForgotPassword}>
+          <Text style={styles.forgotPasswordLink}>Forgot Password?</Text>
+        </TouchableOpacity>
+        {error ? (<Text style={styles.error}>{error}</Text>) : null}
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

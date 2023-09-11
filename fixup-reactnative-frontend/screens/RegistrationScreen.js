@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, KeyboardAvoidingView } from 'react-native';
+import { View, Text, TextInput, ScrollView, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import AuthService from '../services/AuthService';
 import { useNavigation } from '@react-navigation/native';
+import CustomButton from '../components/CustomButtonForLandingPage';
 import { StatusBar } from 'expo-status-bar';
 
 const RegistrationScreen = () => {
@@ -49,59 +50,66 @@ const RegistrationScreen = () => {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       enabled
     >
-      <StatusBar barStyle="dark-content" />
-      <Text style={styles.title}>Registration</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="First Name"
-        onChangeText={(text) => setFirstName(text)}
-        value={firstName}
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Last Name"
-        onChangeText={(text) => setLastName(text)}
-        value={lastName}
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        onChangeText={(text) => setUsername(text)}
-        value={username}
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        onChangeText={(text) => setEmail(text)}
-        value={email}
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        onChangeText={(text) => setPassword(text)}
-        value={password}
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Confirm Password"
-        secureTextEntry
-        onChangeText={(text) => setConfirmPassword(text)}
-        value={confirmPassword}
-        autoCapitalize="none"
-      />
-      <Button title="Sign Up" onPress={handleSignup} />
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-      </KeyboardAvoidingView>
+      <ScrollView
+      contentContainerStyle={styles.container}
+      keyboardDismissMode="on-drag"
+      >
+        <StatusBar barStyle="dark-content" />
+        <Text style={styles.title}>Create an account</Text>
+        <View style={styles.inputContent}>
+          <TextInput
+            style={styles.input}
+            placeholder="First Name"
+            onChangeText={(text) => setFirstName(text)}
+            value={firstName}
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Last Name"
+            onChangeText={(text) => setLastName(text)}
+            value={lastName}
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Username"
+            onChangeText={(text) => setUsername(text)}
+            value={username}
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            onChangeText={(text) => setEmail(text)}
+            value={email}
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            secureTextEntry
+            onChangeText={(text) => setPassword(text)}
+            value={password}
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Confirm Password"
+            secureTextEntry
+            onChangeText={(text) => setConfirmPassword(text)}
+            value={confirmPassword}
+            autoCapitalize="none"
+          />
+          </View>
+        <CustomButton title="Sign Up" onPress={handleSignup} />
+        {error ? <Text style={styles.error}>{error}</Text> : null}
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -110,15 +118,23 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
+    marginTop: 70,
   },
   title: {
     fontSize: 24,
-    marginBottom: 20,
+    marginBottom: 40,
+    fontFamily: 'Montserrat',
+  },
+  inputContent: {
+    width: '80%',
+    marginBottom: 40,
   },
   input: {
-    width: '80%',
-    height: 40,
-    borderColor: 'gray',
+    height: 50,
+    backgroundColor: 'white',
+    borderColor: 'white',
+    borderBottomColor: 'gray',
     borderWidth: 1,
     marginBottom: 10,
     paddingLeft: 10,

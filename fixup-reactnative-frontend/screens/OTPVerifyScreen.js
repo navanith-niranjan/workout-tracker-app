@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, KeyboardAvoidingView } from 'react-native';
+import { Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, ScrollView } from 'react-native';
 import AuthService from '../services/AuthService';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import CustomButton from '../components/CustomButtonForLandingPage';
 import { StatusBar } from 'expo-status-bar';
 
 const OTPVerifyScreen = () => {
@@ -46,7 +47,7 @@ const OTPVerifyScreen = () => {
       const resendResult = await AuthService.resendEmail(email); 
 
       if (resendResult.success) {
-        setIsEmailSent(true);
+        setIsEmailSent(false);
       } 
       else {
           setError(resendResult.error || 'Failed to resend OTP email. Please try again.');
@@ -60,28 +61,35 @@ const OTPVerifyScreen = () => {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       enabled
     >
-      <StatusBar barStyle="dark-content" />
-      <Text style={styles.title}>OTP Verification</Text>
-      {isEmailSent ? (
-        <Text>Check your email for the OTP code.</Text>
-      ) : (
-        <Text>OTP email has been resent.</Text>
-      )}
-      <TextInput
-        style={styles.input}
-        placeholder="Enter OTP"
-        onChangeText={(text) => setOTP(text)}
-        value={otp}
-        autoCapitalize="none"
-      />
-      <Button title="Verify" onPress={handleVerify} />
-      <Button title="Resend Email" onPress={handleResendEmail} />
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-      </KeyboardAvoidingView>
+      <ScrollView
+      contentContainerStyle={styles.container}
+      keyboardDismissMode="on-drag"
+      >
+        <StatusBar barStyle="dark-content" />
+        <Text style={styles.title}>OTP Verification</Text>
+        {isEmailSent ? (
+          <Text style={styles.subtitle}>Check your email for the OTP code.</Text>
+        ) : (
+          <Text style={styles.subtitle}>OTP email has been resent.</Text>
+        )}
+        <TextInput
+          style={styles.input}
+          keyboardType='numeric'
+          onChangeText={(text) => setOTP(text)}
+          value={otp}
+          autoCapitalize="none"
+        />
+        <CustomButton title="Verify" onPress={handleVerify} />
+        <TouchableOpacity onPress={handleResendEmail}>
+            <Text style={styles.resendEmail}>Resend email?</Text>
+        </TouchableOpacity>
+        {error ? <Text style={styles.error}>{error}</Text> : null}
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -90,18 +98,34 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
+    marginTop: 70,
   },
   title: {
     fontSize: 24,
-    marginBottom: 20,
+    marginBottom: 10,
+    fontFamily: 'Montserrat',
+  },
+  subtitle: {
+    fontSize: 14,
+    marginBottom: 40,
+    fontFamily: 'Montserrat',
   },
   input: {
     width: '80%',
-    height: 40,
-    borderColor: 'gray',
+    marginBottom: 40,
+    height: 50,
+    backgroundColor: 'white',
+    borderColor: 'white',
+    borderBottomColor: 'gray',
     borderWidth: 1,
-    marginBottom: 10,
     paddingLeft: 10,
+  },
+  resendEmail: {
+    color: 'blue', 
+    textDecorationLine: 'underline', 
+    marginTop: 10, 
+    fontFamily: 'Montserrat',
   },
   error: {
     color: 'red',
