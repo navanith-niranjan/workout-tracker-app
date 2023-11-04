@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import useCustomFonts from './components/CustomFonts';
 import AuthNavigator from './navigation/AuthNavigator';
 import AuthService from './services/AuthService';
@@ -21,7 +21,7 @@ export default function App () {
         const isTokenValid = await AuthService.verifyToken(token);
         console.log('Is Token Valid:', isTokenValid);
         if (isTokenValid) {
-          setInitialRoute("Home");
+          setInitialRoute("Main");
         } else {
           setInitialRoute("Landing");
         }

@@ -68,14 +68,12 @@ const RegistrationScreen = () => {
             placeholder="First Name"
             onChangeText={(text) => setFirstName(text)}
             value={firstName}
-            autoCapitalize="none"
           />
           <TextInput
             style={styles.input}
             placeholder="Last Name"
             onChangeText={(text) => setLastName(text)}
             value={lastName}
-            autoCapitalize="none"
           />
           <TextInput
             style={styles.input}

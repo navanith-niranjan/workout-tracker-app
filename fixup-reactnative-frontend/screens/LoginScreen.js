@@ -22,7 +22,7 @@ const LoginScreen = () => {
     const loginResult = await AuthService.login(emailOrUsername, password);
 
     if (loginResult.success) {
-      navigation.navigate('Home');
+      navigation.navigate('Main');
     } 
     else {
       if (loginResult.error === 'Account is not verified') {

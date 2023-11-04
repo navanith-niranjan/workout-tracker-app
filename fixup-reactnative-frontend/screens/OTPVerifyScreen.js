@@ -27,7 +27,7 @@ const OTPVerifyScreen = () => {
         const loginResult = await AuthService.login(email, password); 
 
         if (loginResult.success) {
-          navigation.navigate('Home');
+          navigation.navigate('Main');
         }
         else {
           setError('Login failed')

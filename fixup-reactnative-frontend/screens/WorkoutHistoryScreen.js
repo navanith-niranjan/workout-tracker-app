@@ -2,12 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
-const HomeScreen = () => {
+const WorkoutHistoryScreen = () => {
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      <Text style={styles.title}>Monkey</Text>
+      <Text style={styles.title}>Tiger</Text>
     </View>
   );
 };
@@ -24,4 +24,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default HomeScreen;
+export default WorkoutHistoryScreen;
