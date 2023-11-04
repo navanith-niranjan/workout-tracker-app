@@ -1,16 +1,42 @@
 import axios from 'axios'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axiosInstance from './axiosConfig';
 
 class AuthService {
   constructor() {
-    this.apiBaseUrl = 'https://cb12-162-212-233-34.ngrok-free.app';
+    this.apiBaseUrl = 'https://7b3a-162-212-233-34.ngrok-free.app';
+  }
+  
+  async saveToken(token) {
+    try {
+      await AsyncStorage.setItem('authToken', token);
+    } catch (error) {
+      console.error('Error saving token:', error);
+    }
+  }
+
+  async verifyToken(token) {
+    try {
+      const response = await axiosInstance.post(`${this.apiBaseUrl}/api/auth/token/verify/`, { token: token });
+
+      if (response.status === 200) {
+        return true; 
+      } else {
+        return false; 
+      }
+
+    } catch (error) {
+      console.error('Token verification error:', error);
+      return false; 
+    }
   }
 
   async get_email(Username) {
     try {
       const response = await axios.post(`${this.apiBaseUrl}/api/get-email/`, {username: Username});
+
       return response.data.email;
-    } 
-    catch (error) {
+    } catch (error) {
       console.error('Error:', error);
     }
   }
@@ -32,19 +58,35 @@ class AuthService {
   
       const response = await axios.post(`${this.apiBaseUrl}/api/auth/login/`, requestData);
       const userData = response.data;
-      console.log(userData.access)
+
+      if (userData.access) {
+        await this.saveToken(userData.access);
+      }
+
       return { success: true, data: userData, token: userData.access };
-    } 
-    catch (error) {
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.non_field_errors) {
         const errorMessages = error.response.data.non_field_errors;
-        
+
         if (errorMessages.includes('E-mail is not verified.')) {
           return { success: false, error: 'Account is not verified' };
         }
+    }
       return { success: false, error: error.message };
     }
   }
-  
+
+  async logout() {
+    try {
+      await AsyncStorage.removeItem('authToken');
+      
+      return { success: true };
+    } catch (error) {
+        console.error('Logout error:', error);
+        return { success: false, error: error.message };
+    }
+  }
+
   async signup(username, email, password1, password2, firstName = '', lastName = '') {
     try {
       const requestData = {

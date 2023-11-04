@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from decouple import config
+import datetime
 
 # SOCIAL_GOOGLE_CLIENT_SECRET = config('SOCIAL_GOOGLE_CLIENT_SECRET')
 # SOCIAL_GOOGLE_CALLBACK_URL = config('SOCIAL_GOOGLE_CALLBACK_URL')
@@ -91,10 +92,12 @@ REST_AUTH = {
     'USE_JWT': True,
     'JWT_AUTH_COOKIE': 'api-auth',
     'JWT_AUTH_REFRESH_COOKIE': 'api-refresh-token',
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=30),
     'LOGOUT_ON_PASSWORD_CHANGE' : False,
 }
 
-ALLOWED_HOSTS = ['127.0.0.1', 'cb12-162-212-233-34.ngrok-free.app']
+ALLOWED_HOSTS = ['127.0.0.1', '7b3a-162-212-233-34.ngrok-free.app']
 
 # Need to change this for production
 CORS_ALLOW_ALL_ORIGINS = True

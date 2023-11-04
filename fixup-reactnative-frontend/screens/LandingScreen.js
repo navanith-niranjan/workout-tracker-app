@@ -3,18 +3,17 @@ import { View, Text, StyleSheet } from 'react-native';
 import CustomButton from '../components/CustomButtonForLandingPage';
 import { useNavigation } from '@react-navigation/native';
 import useCustomFonts from '../components/CustomFonts';
-import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 
 const LandingScreen = () => {
+
+  const navigation = useNavigation();
 
   const { fontsLoaded, fontError } = useCustomFonts();
 
   if (!fontsLoaded && !fontError) {
     return null; 
   }
-
-  const navigation = useNavigation();
 
   const handleSignUp = () => {
     navigation.navigate('SignUp');
@@ -25,10 +24,6 @@ const LandingScreen = () => {
   };
 
   return (
-    // <LinearGradient
-    //   colors={['#6800B4', '#36004E']}
-    //   style={styles.container}
-    // >
       <View style={styles.content}>
         <StatusBar barStyle="dark-content" />
         <Text style={styles.title}>FIXUP</Text>
@@ -38,7 +33,6 @@ const LandingScreen = () => {
           <CustomButton title="Get started" onPress={handleSignUp} />
         </View>
       </View>
-    // </LinearGradient>
   );
 };
 
@@ -62,7 +56,6 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Montserrat',
     fontSize: 24,
-    // color: 'white',
     marginBottom: 10,
   },
   subtitle: {
@@ -70,7 +63,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: 16,
-    // color: 'white',
     marginBottom: 20,
   },
 });

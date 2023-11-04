@@ -8,9 +8,11 @@ import HomeScreen from '../screens/HomeScreen'
 
 const Stack = createStackNavigator();
 
-const AuthNavigator = () => {
+const AuthNavigator = ({ initialRoute }) => {
+  console.log('Received initialRoute prop:', initialRoute);
+
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={initialRoute}>
       <Stack.Screen name="Landing" component={LandingScreen} />
       <Stack.Screen name="SignUp" component={RegistrationScreen} />
       <Stack.Screen name="OTPVerify" component={OTPVerifyScreen} />
