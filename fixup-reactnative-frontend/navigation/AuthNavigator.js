@@ -11,7 +11,7 @@ const Stack = createStackNavigator();
 const AuthNavigator = ({ initialRoute }) => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={initialRoute}>
-      <Stack.Screen name="Landing" component={LandingScreen} />
+      <Stack.Screen name="Landing" component={LandingScreen} options={{ gestureEnabled: false }}/>
       <Stack.Screen name="SignUp" component={RegistrationScreen} />
       <Stack.Screen name="OTPVerify" component={OTPVerifyScreen} />
       <Stack.Screen name="SignIn" component={LoginScreen} />

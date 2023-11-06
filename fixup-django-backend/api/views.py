@@ -139,6 +139,9 @@ class CustomRegisterView(RegisterView):
         user.generate_otp_secret()
         otp_code = user.generate_otp_code()
         self.send_otp_email(user.email, otp_code)
+        user.first_name = self.request.data.get('first_name')
+        user.last_name = self.request.data.get('last_name')
+        user.save()
 
         return user
     

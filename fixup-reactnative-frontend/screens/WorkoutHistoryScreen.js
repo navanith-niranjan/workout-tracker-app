@@ -1,13 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import StartWorkoutButton from '../components/StartWorkoutButton';
 
 const WorkoutHistoryScreen = () => {
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      <Text style={styles.title}>Tiger</Text>
+      <StartWorkoutButton />
     </View>
   );
 };

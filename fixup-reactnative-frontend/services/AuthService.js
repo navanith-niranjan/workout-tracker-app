@@ -63,6 +63,8 @@ class AuthService {
         await this.saveToken(userData.access);
       }
 
+      await AsyncStorage.setItem('user_pk', userData.user.pk.toString());
+
       return { success: true, data: userData, token: userData.access };
     } catch (error) {
       if (error.response && error.response.data && error.response.data.non_field_errors) {
@@ -79,7 +81,9 @@ class AuthService {
   async logout() {
     try {
       await AsyncStorage.removeItem('authToken');
-      
+      await AsyncStorage.removeItem('user_pk');
+      await axios.post(`${this.apiBaseUrl}/api/auth/logout/`);
+
       return { success: true };
     } catch (error) {
         console.error('Logout error:', error);
@@ -87,7 +91,7 @@ class AuthService {
     }
   }
 
-  async signup(username, email, password1, password2, firstName = '', lastName = '') {
+  async signup(username, email, password1, password2, firstName, lastName) {
     try {
       const requestData = {
         username: username,
