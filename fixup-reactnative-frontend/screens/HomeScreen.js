@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import MainService from '../services/MainService';
 import StartWorkoutButton from '../components/StartWorkoutButton';
+import { useSelector } from 'react-redux';
 
 const HomeScreen = () => {
   const currentHour = new Date().getHours();
@@ -15,25 +16,24 @@ const HomeScreen = () => {
     greeting = 'Good Evening';
   }
 
-  const [userFirstName, setUserFirstName] = useState('');
+  const user = useSelector((state) => state.user.user);
 
   useEffect(() => {
-    const fetchUserFirstName = async () => {
+    async function fetchUserInfo() {
       try {
-        const userInfo = await MainService.getUserInfo();
-        setUserFirstName(userInfo.first_name);
+        await MainService.getUserInfo();
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
-    };
+    }
 
-    fetchUserFirstName();
+    fetchUserInfo();
   }, []);
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      <Text style={styles.title}>{greeting}, {userFirstName}</Text>
+      <Text style={styles.title}>{greeting}, {user?.first_name || ""}</Text>
       <StartWorkoutButton />
     </View>
   );

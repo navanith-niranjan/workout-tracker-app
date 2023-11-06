@@ -1,5 +1,7 @@
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setUser } from '../redux/userReducer';
+import store from '../redux/store';
 
 class MainService {
   constructor() {
@@ -12,7 +14,11 @@ class MainService {
 
         if (pk) {
             const response = await axios.get(`${this.apiBaseUrl}/api/users/${pk}/`);
-            return response.data;
+            const userInfo = response.data;
+
+            store.dispatch(setUser(userInfo));
+
+            return userInfo;
         } else {
             throw new Error('User pk not found in AsyncStorage')
         }
