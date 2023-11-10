@@ -3,10 +3,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import useCustomFonts from './components/CustomFonts';
 import AuthNavigator from './navigation/AuthNavigator';
 import AuthService from './services/AuthService';
+import MainService from './services/MainService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import store from './redux/store';
 import { Provider, useSelector } from 'react-redux';
 import { setAuthState } from './redux/authReducer';
+import { setUser } from './redux/userReducer';
 
 export default function App () {
   return (
@@ -36,6 +38,9 @@ function AppContent() {
         console.log('Is Token Valid:', isTokenValid);
     
         if (isTokenValid) {
+          const userData = await MainService.getUserInfo(token);
+          store.dispatch(setUser(userData));
+
           store.dispatch(setAuthState({ isAuthenticated: true }));
         } else {
           store.dispatch(setAuthState({ isAuthenticated: false }));
