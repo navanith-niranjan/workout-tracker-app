@@ -1,13 +1,13 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from .models import User, WorkoutHistory, Sessions, WeightLiftSession, RunningSession, ExerciseList, CustomExerciseList
 from .serializer import UserSerializer, WorkoutHistorySerializer, SessionsSerializer, WeightLiftSessionSerializer, RunningSessionSerializer, ExerciseListSerializer, CustomExerciseListSerializer
 from django.db.models import Max
 from rest_framework.permissions import IsAuthenticated
 from dj_rest_auth.registration.views import RegisterView, VerifyEmailView, ResendEmailVerificationView
-from dj_rest_auth.views import PasswordResetView, PasswordResetConfirmView
+from dj_rest_auth.views import PasswordResetView, PasswordResetConfirmView, LogoutView
 from allauth.account.models import EmailAddress
 import pyotp
 from django.core.mail import send_mail
@@ -203,8 +203,15 @@ class UserViewSet(viewsets.ModelViewSet):
         except User.DoesNotExist:
             raise Http404
 
+        # Additional code to delete the 'api-auth' and 'api-refresh-token' cookies
+        response = Response({"detail": "User deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+        response.delete_cookie('api-auth')
+        response.delete_cookie('api-refresh-token')
+
+        # Delete the user account
         user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+
+        return response
 
 class WorkoutHistoryViewSet(viewsets.ModelViewSet):
     queryset = WorkoutHistory.objects.all()

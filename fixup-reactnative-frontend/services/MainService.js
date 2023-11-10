@@ -5,7 +5,7 @@ import store from '../redux/store';
 
 class MainService {
   constructor() {
-    this.apiBaseUrl = 'https://7b3a-162-212-233-34.ngrok-free.app';
+    this.apiBaseUrl = 'https://5d84-162-212-233-34.ngrok-free.app';
   }
   
   async getUserInfo() {

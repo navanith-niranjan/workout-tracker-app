@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import CustomButton from '../components/CustomButtonForLandingPage'; 
 import AuthService from '../services/AuthService';
@@ -17,11 +17,20 @@ const ProfileScreen = () => {
     }
   };
 
+  // const handleDeleteAccount = async () => {
+  //   const deleteResult = await AuthService.deleteAccount();
+  //   if (deleteResult.success) {
+  //     navigation.navigate('Landing');
+  //   } else {
+  //     Alert.alert('Error', 'Failed to delete your account. Please try again.');
+  //   }
+  // };
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <CustomButton title="Sign Out" onPress={handleSignOut} />
-      <CustomButton title="Delete Account" />
+      {/* <CustomButton title="Delete Account" onPress={handleDeleteAccount}/> */}
     </View>
   );
 };

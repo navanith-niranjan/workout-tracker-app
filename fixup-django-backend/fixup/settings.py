@@ -101,7 +101,7 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=20),
 }
 
-ALLOWED_HOSTS = ['127.0.0.1', '7b3a-162-212-233-34.ngrok-free.app']
+ALLOWED_HOSTS = ['127.0.0.1', '5d84-162-212-233-34.ngrok-free.app']
 
 # Need to change this for production
 CORS_ALLOW_ALL_ORIGINS = True

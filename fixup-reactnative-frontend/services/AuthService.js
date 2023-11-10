@@ -1,10 +1,12 @@
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axiosInstance from './axiosConfig';
+import { axiosInstance, clearCookies } from './axiosConfig';
+import store from '../redux/store';
+import { clearAuthState } from '../redux/authReducer';
 
 class AuthService {
   constructor() {
-    this.apiBaseUrl = 'https://7b3a-162-212-233-34.ngrok-free.app';
+    this.apiBaseUrl = 'https://5d84-162-212-233-34.ngrok-free.app';
   }
   
   async saveToken(token) {
@@ -80,8 +82,9 @@ class AuthService {
 
   async logout() {
     try {
-      await AsyncStorage.removeItem('authToken');
-      await AsyncStorage.removeItem('user_pk');
+      await AsyncStorage.clear();
+      store.dispatch(clearAuthState());
+
       await axios.post(`${this.apiBaseUrl}/api/auth/logout/`);
 
       return { success: true };
@@ -217,6 +220,29 @@ class AuthService {
       return { success: false, error: 'Passwords do not match' };
     }
   }
+
+  // async deleteAccount() {
+  //   try {
+  //     const pk = await AsyncStorage.getItem('user_pk');
+      
+  //     if (pk) {
+  //       const response = await axiosInstance.delete(`${this.apiBaseUrl}/api/users/${pk}/`);
+        
+  //       if (response.status === 204) {
+  //         await AsyncStorage.clear();
+  //         store.dispatch(clearAuthState());
+  //         clearCookies();
+  //         console.log("IT WORKED IT DELETED")
+  //       }
+
+  //       return {success: true}
+  //     } else {
+  //       throw new Error('User pk not found in AsyncStorage')
+  //     }
+  //   } catch (error) {
+  //     return {success: false, error: 'Failed to delete account'}
+  //   }
+  // }
   
 }
 

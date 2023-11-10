@@ -5,7 +5,7 @@ import AuthNavigator from './navigation/AuthNavigator';
 import AuthService from './services/AuthService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import store from './redux/store';
-import { Provider, useSelector, useDispatch } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import { setAuthState } from './redux/authReducer';
 
 export default function App () {
@@ -17,7 +17,6 @@ export default function App () {
 }
 
 function AppContent() {
-  const dispatch = useDispatch();
   const authState = useSelector((state) => state.auth);
   const [key, setKey] = useState(0);
 
@@ -29,16 +28,20 @@ function AppContent() {
     try {
       const token = await AsyncStorage.getItem('authToken');
       
+      console.log('Stored Token:', token);
+      
       if (token) {
         const isTokenValid = await AuthService.verifyToken(token);
+
+        console.log('Is Token Valid:', isTokenValid);
     
         if (isTokenValid) {
-          dispatch(setAuthState({ isAuthenticated: true }));
+          store.dispatch(setAuthState({ isAuthenticated: true }));
         } else {
-          dispatch(setAuthState({ isAuthenticated: false }));
+          store.dispatch(setAuthState({ isAuthenticated: false }));
         }
       } else {
-        dispatch(setAuthState({ isAuthenticated: false }));
+        store.dispatch(setAuthState({ isAuthenticated: false }));
       }
 
       setKey(prevKey => prevKey + 1);
